@@ -22,12 +22,21 @@ export default class App extends Component {
   };
 
   render() {
-    const { todos, actions } = this.props;
+    const {todos, actions} = this.props;
 
     return (
       <div className={style.normal}>
         <Header addTodo={actions.addTodo} />
-        <MainSection todos={todos} actions={actions} />
+        <MainSection todos={todos}
+                     actions={actions} />
+        <br/>
+        <br/>
+        <br/>
+        <div>
+          Hello World
+        </div>
+        <iframe src={"http://www.bbc.com/news"}
+                frameBorder="0" />
       </div>
     );
   }
