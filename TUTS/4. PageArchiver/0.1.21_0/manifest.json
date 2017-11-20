@@ -1,0 +1,28 @@
+{
+   "background": {
+      "scripts": [ "scripts/migration.js", "scripts/zip.js", "scripts/background.js", "scripts/storage.js" ]
+   },
+   "browser_action": {
+      "default_icon": "resources/icon_48.png",
+      "default_popup": "pages/popup.html",
+      "default_title": "View archives"
+   },
+   "description": "Helps you to archive web pages for offline reading",
+   "icons": {
+      "128": "resources/icon_128.png",
+      "16": "resources/icon_16.png",
+      "48": "resources/icon_48.png"
+   },
+   "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCkwFsDvxXEirQqQsn+EZdaMYdOJpC6TPOp7Ry/SGx5W7dZT4nd4HHcZNUARy1DUPSzo1Qt9UBHbtlDk22ittPTfNwn9GVqtXb4YVkTvwYTBA2ISSht1TurVhhpRk7qU7kO+1Ct+2TOuN80K8SCktSNMbnb3nWCXTZU+CVAYdAO1QIDAQAB",
+   "manifest_version": 2,
+   "minimum_chrome_version": "7",
+   "name": "PageArchiver",
+   "omnibox": {
+      "keyword": "pa"
+   },
+   "options_page": "pages/options.html",
+   "permissions": [ "tabs", "unlimitedStorage", "notifications" ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "0.1.21",
+   "web_accessible_resources": [ "resources/icon_48.png", "pages/proxy-page.css", "scripts/color-picker.js", "scripts/proxy-page.js" ]
+}
