@@ -33,6 +33,10 @@ var wininfo = {};
 
   function addListener(onMessage) {
     console.log("addListener(onMessage)");
+    /**
+     * fires onMessage->onWindowMessage with the params
+     * @param  {object} event event.data has the value: wininfo::{"initResponse":true,"frames":[],"winId":"0","index":0}
+     */
     function windowMessageListener(event) {
       console.log("windowMessageListener(event)");
       var data = event.data;
@@ -86,14 +90,18 @@ var wininfo = {};
         return "";
       }
 
+      debugger;
       function addListener(onMessage) {
         console.log("addListener(onMessage)");
+        debugger;
         function windowMessageListener(event) {
           console.log("windowMessageListener(event)");
+          debugger;
           var data = event.data;
           if (typeof data === "string" && data.indexOf(extensionId + "::") == 0)
             onMessage(parse(data.substr(extensionId.length + 2)));
         }
+        debugger;
         top.addEventListener("message", windowMessageListener, false);
       }
 
@@ -119,6 +127,8 @@ var wininfo = {};
         }), "*");
       for (i = 0; i < elements.length; i++)
         (function(index) {
+          debugger;
+          console.log("(function(index)");
           var frameElement = elements[i],
             frameWinId = winId + "." + index,
             frameDoc = frameElement.contentDocument;
@@ -146,6 +156,7 @@ var wininfo = {};
 
           if (frameDoc && top.addEventListener) {
             execute(extensionId, frameDoc.querySelectorAll("iframe, frame"), index, frameWinId, frameElement.contentWindow);
+            debugger;
             addListener(onMessage);
           } else {
             frameElement.contentWindow.postMessage(extensionId + "::" + stringify({
@@ -199,6 +210,10 @@ var wininfo = {};
     location.href = "javascript:(" + executeSetFramesWinIdString + ")('" + EXT_ID + "'," + wininfo.index + ",'" + wininfo.winId + "'); void 0;";
   }
 
+  /**
+   * fired from onWindowMessage
+   * @param  {object} message contains index, frames, winId, initResponse
+   */
   function initResponse(message) {
     console.log("initResponse(message)");
     function process() {
@@ -253,6 +268,10 @@ var wininfo = {};
     }
   }
 
+  /**
+   * fired from windowMessageListener
+   * @param  {object} message contains frames, index, initResponse and winId objects
+   */
   function onWindowMessage(message) {
     console.log("onWindowMessage(message)");
     if (message.initRequest)

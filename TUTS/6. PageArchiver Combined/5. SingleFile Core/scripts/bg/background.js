@@ -39,6 +39,7 @@
 
   function executeScripts(tabId, scripts, callback, index) {
     console.log("executeScripts(tabId, scripts, callback, index)");
+    console.log("tabId:", tabId, "scripts:", scripts, "callback:", callback, "index:", index);
     if (!index)
       index = 0;
     if (index < scripts.length)
