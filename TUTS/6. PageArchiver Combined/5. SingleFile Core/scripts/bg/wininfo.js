@@ -19,6 +19,12 @@
  */
 
 var wininfo = {
+
+  /**
+   * sends an message initRequest to door-quote page->wininfo script
+   * @param  {integer}   tabId    id of tab to send the message to
+   * @param  {Function} callback declared in bgcore->PageData-> clears timeout, sets processableDocs calls the callback in parent
+   */
   init: function(tabId, callback) {
     console.log("init: function(tabId, callback)");
     chrome.extension.onMessage.addListener(function(message) {

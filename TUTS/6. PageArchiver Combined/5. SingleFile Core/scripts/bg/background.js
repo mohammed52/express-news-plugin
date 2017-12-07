@@ -164,6 +164,14 @@
     pageData.setDocContent(docData, content, setContentResponse);
   }
 
+  /**
+   * processes each tab ???
+   * @param  {integer} tabId            
+   * @param  {object} senderId         id of the sender extension that sent request i.e. PageArchiver
+   * @param  {object} config           settings for frames, scripts etc
+   * @param  {boolean} processSelection // false when called for the first time
+   * @param  {boolean} processFrame     // false when called for the first time
+   */
   function process(tabId, senderId, config, processSelection, processFrame) {
     console.log("process(tabId, senderId, config, processSelection, processFrame)");
     var pageData,
@@ -264,7 +272,12 @@
       port.onDisconnect.addListener(onDisconnect);
     }
   }
-
+  /**
+   * onMessageExternal
+   * @param  {array} request      array of tabIds
+   * @param  {object} sender       id and url of the chrome plugin where the request came from
+   * @param  {function} sendResponse callBack, call back may do nothing, check from the message sender
+   */
   function onMessageExternal(request, sender, sendResponse) {
     console.log("onMessageExternal(request, sender, sendResponse)");
     var property,

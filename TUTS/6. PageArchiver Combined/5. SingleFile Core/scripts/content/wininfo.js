@@ -41,9 +41,25 @@ var wininfo = {};
     }
     this.addEventListener("message", windowMessageListener, false);
   }
-
+  /**
+   * WHAT DOES THIS DO ???
+   * @param  {string} extensionId name of the file that has generated this method, value is 'wininfo'
+   * @param  {integer} index       some index, starts with zero
+   * @param  {integer} winId       starts from 0
+   */
   function executeSetFramesWinId(extensionId, index, winId) {
+    debugger;
     console.log("executeSetFramesWinId(extensionId, index, winId)");
+
+    /**
+     * execute - WHAT DOES THIS DO ??? 
+     * @param  {string} extensionId starting value is wininfo
+     * @param  {array} elements    its a NodeList, starting is empty
+     * @param  {integer} index       some index ???
+     * @param  {integer} winId       also starts from 0
+     * @param  {object} win         window object, many objects and methods, the window object is passed to the method execute()
+     * @return {[type]}             [description]
+     */
     function execute(extensionId, elements, index, winId, win) {
       console.log("execute(extensionId, elements, index, winId, win)");
       var i,
@@ -164,6 +180,10 @@ var wininfo = {};
     contentRequestCallbacks[id](message);
   }
 
+  /**
+   * calls initResponse after 3 seconds, what is location ??, 
+   * @param  {object} message contains index, initRequest and winId objects, initRequest is true
+   */
   function initRequest(message) {
     console.log("initRequest(message)");
     wininfo.winId = message.winId;
@@ -217,7 +237,10 @@ var wininfo = {};
       wininfo.index = message.index;
     }
   }
-
+  /**
+   * onExtensionMessage, calls initRequest on the door-quote page, 
+   * @param  {object} message contains objects: index, initRequest and winId
+   */
   function onExtensionMessage(message) {
     console.log("onExtensionMessage(message)");
     if (message.initRequest && document.documentElement instanceof HTMLHtmlElement) {

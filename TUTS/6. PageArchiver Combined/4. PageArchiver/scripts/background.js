@@ -174,6 +174,9 @@ function onProcessEnd() {
   }, 3000);
 }
 
+/**
+ * setTimeoutNoResponse
+ */
 function setTimeoutNoResponse() {
   console.log("setTimeoutNoResponse()");
   if (timeoutNoResponse)
@@ -192,6 +195,10 @@ function setTimeoutNoResponse() {
   }, 60000);
 }
 
+/**
+ * saveTabs - 
+ * @param  {array} tabIds array of tab ids, normally only one id in the array
+ */
 function saveTabs(tabIds) {
   console.log("saveTabs(tabIds)");
   setTimeoutNoResponse();
@@ -364,6 +371,13 @@ function createNewNote(title) {
 }
 ;
 
+/**
+ * notifyTabProgress
+ * @param  {integer} tabId 
+ * @param  {integer} state one of four states I guess ?
+ * @param  {integer} index current position
+ * @param  {integer} max   max value possible for the view bar
+ */
 function notifyTabProgress(tabId, state, index, max) {
   console.log("notifyTabProgress(tabId, state, index, max)");
   notifyViews(function(view) {

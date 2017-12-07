@@ -22,7 +22,16 @@
 
   singlefile.PageData = PageData;
   singlefile.DocData = DocData;
-
+  /**
+   * DONT KNOW ??? calls wininfo.init, 
+   * @param {integer}   tabId            
+   * @param {integer}   pageId          var initialized to 0 in background.js, value is 1 in the first call
+   * @param {string}   senderId         request sender extension ID i.e. PageArchiver
+   * @param {object}   config           settings object, initialized from default settings in background.js
+   * @param {bool}   processSelection DONT KNOW ???
+   * @param {bool}   processFrame     DONT KNOW ???
+   * @param {Function} callback         [calls the execute scripts method on each page]
+   */
   function PageData(tabId, pageId, senderId, config, processSelection, processFrame, callback) {
     console.log("PageData(tabId, pageId, senderId, config, processSelection, processFrame, callback)");
     var timeoutError,

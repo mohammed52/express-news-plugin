@@ -22,6 +22,9 @@
 
   singlefile.nio = {};
 
+  /**
+   * creates a request manager, with method declarations and objects
+   */
   singlefile.nio.RequestManager = function() {
     console.log("singlefile.nio.RequestManager = function()");
     var cache = {},
