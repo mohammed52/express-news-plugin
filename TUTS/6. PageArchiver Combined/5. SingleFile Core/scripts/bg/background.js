@@ -36,10 +36,18 @@
   var tabs = singlefile.tabs = [],
     processingPagesCount = 0,
     pageId = 0;
-
+  /**
+   * executeScripts - 
+   * @param  {[type]}   tabId    [description]
+   * @param  {[type]}   scripts  [description]
+   * @param  {Function} callback [description]
+   * @param  {[type]}   index    [description]
+   * @return {[type]}            [description]
+   */
   function executeScripts(tabId, scripts, callback, index) {
     console.log("executeScripts(tabId, scripts, callback, index)");
     console.log("tabId:", tabId, "scripts:", scripts, "callback:", callback, "index:", index);
+    // console.log(tabId, scripts, callback, index);
     if (!index)
       index = 0;
     if (index < scripts.length)
@@ -166,7 +174,7 @@
   }
 
   /**
-   * processes each tab ???
+   * processes each tab ??? calls executeScripts with tabIds and scripts, callback and index is left undefined
    * @param  {integer} tabId            
    * @param  {object} senderId         id of the sender extension that sent request i.e. PageArchiver
    * @param  {object} config           settings for frames, scripts etc
@@ -214,6 +222,10 @@
       delete tabs[pageData.tabId];
   }
 
+  /**
+   * onConnect - adds onMessage and onDisconnect listeners
+   * @param  {object} port contains name(singleFile), onDisconnect, onMessage, sender(extension id ma, tab url etx)
+   */
   function onConnect(port) {
     console.log("onConnect(port)");
     var tabId = port.sender.tab.id,
