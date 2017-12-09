@@ -102,7 +102,7 @@
     var node,
       wrapper,
       clonedNode,
-      selection = getSelection(),
+      selection = getSelection(), // Returns a Selection object representing the range of text selected by the user or the current position of the caret
       range = selection.rangeCount ? selection.getRangeAt(0) : null;
     function addStyle(node) {
       console.log("addStyle(node)");
@@ -219,9 +219,13 @@
   }
 
   // ----------------------------------------------------------------------------------------------
-
+  /**
+   * init() - method called when content.js is run as content_script, adds bgPort.onMessage.addListener
+   *  bgprocessinit() and fgpocessinit()
+   */
   function init() {
     console.log("init()");
+    debugger;
     var selectedContent = getSelectedContent(),
       topWindow = window == top;
 
