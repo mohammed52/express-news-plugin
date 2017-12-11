@@ -64,6 +64,7 @@ var wininfo = {};
      * @return {[type]}             [description]
      */
     function execute(extensionId, elements, index, winId, win) {
+      debugger;
       console.log("execute(extensionId, elements, index, winId, win)");
       var i,
         framesInfo = [],
@@ -91,6 +92,13 @@ var wininfo = {};
 
       function addListener(onMessage) {
         console.log("addListener(onMessage)");
+
+        // this is called when window.postMessage(event) is fired from the execute()
+        // event contains:
+        // 1. data - 1st argument in the postMessage(arg1)
+        // 2. origin - url of the originating window: door-quote-automator.herokuapp.com
+        // 3. source - Window object of the source
+        // 4. target - Window object for the target
         function windowMessageListener(event) {
           console.log("windowMessageListener(event)");
           var data = event.data;
@@ -109,11 +117,25 @@ var wininfo = {};
         });
       }
       if (win != top)
-        win.postMessage(extensionId + "::" + stringify({
-            initResponse: true,
-            winId: winId,
-            index: index
-          }), "*");
+        console.log("win.postMessage(extensionId + \"::\" + stringify({");
+
+
+      // window.postMessage() method safely enables cross-origin communication 
+      // between scripts on different pages, causes a MessageEvent to be dispatched
+      // at the target window when any pending script that must be executed completes
+      // 
+      // The MessageEvent has the type message, a data property which is set to the
+      //  value of the first argument provided to window.postMessage(), an origin property
+      //   corresponding to the origin of the main document in the window calling 
+      //   window.postMessage at the time window.postMessage() was called, and a
+      //    source property which is the window from which window.postMessage()
+      //     is called. (Other standard properties of events are present with their expected values.)
+      win.postMessage(extensionId + "::" + stringify({
+          initResponse: true,
+          winId: winId,
+          index: index
+        }), "*");
+      console.log("top.postMessage(extensionId + \"::\" + stringify({");
       top.postMessage(extensionId + "::" + stringify({
           initResponse: true,
           frames: framesInfo,
