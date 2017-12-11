@@ -52,7 +52,6 @@ var wininfo = {};
    * @param  {integer} winId       starts from 0
    */
   function executeSetFramesWinId(extensionId, index, winId) {
-    debugger;
     console.log("executeSetFramesWinId(extensionId, index, winId)");
 
     /**
@@ -90,18 +89,14 @@ var wininfo = {};
         return "";
       }
 
-      debugger;
       function addListener(onMessage) {
         console.log("addListener(onMessage)");
-        debugger;
         function windowMessageListener(event) {
           console.log("windowMessageListener(event)");
-          debugger;
           var data = event.data;
           if (typeof data === "string" && data.indexOf(extensionId + "::") == 0)
             onMessage(parse(data.substr(extensionId.length + 2)));
         }
-        debugger;
         top.addEventListener("message", windowMessageListener, false);
       }
 
@@ -127,7 +122,6 @@ var wininfo = {};
         }), "*");
       for (i = 0; i < elements.length; i++)
         (function(index) {
-          debugger;
           console.log("(function(index)");
           var frameElement = elements[i],
             frameWinId = winId + "." + index,
@@ -156,7 +150,6 @@ var wininfo = {};
 
           if (frameDoc && top.addEventListener) {
             execute(extensionId, frameDoc.querySelectorAll("iframe, frame"), index, frameWinId, frameElement.contentWindow);
-            debugger;
             addListener(onMessage);
           } else {
             frameElement.contentWindow.postMessage(extensionId + "::" + stringify({
@@ -221,6 +214,7 @@ var wininfo = {};
       wininfo.frames = wininfo.frames.filter(function(frame) {
         return frame.winId;
       });
+      console.log("chrome.extension.sendMessage({");
       chrome.extension.sendMessage({
         initResponse: true,
         processableDocs: wininfo.frames.length + 1

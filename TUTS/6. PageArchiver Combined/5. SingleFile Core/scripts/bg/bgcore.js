@@ -47,6 +47,7 @@
     this.processFrame = processFrame;
     this.processing = true;
     this.tabId = tabId;
+    // creates a nio.RequestManager
     this.requestManager = new singlefile.nio.RequestManager();
     this.progressIndex = 0;
     this.progressMax = 0;
@@ -59,11 +60,15 @@
     this.frameDocData = null;
     timeoutError = setTimeout(function() {
       that.processing = false;
+      console.log("chrome.extension.sendMessage(that.senderId, {");
       chrome.extension.sendMessage(that.senderId, {
         processError: true,
         tabId: tabId
       });
     }, 15000);
+
+    // sends an message initRequest to the tab door-quote page->wininfo script
+    // second param is a call back
     wininfo.init(tabId, function(processableDocs) {
       clearTimeout(timeoutError);
       that.processableDocs = processableDocs;

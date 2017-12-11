@@ -19,20 +19,23 @@
  */
 (function() {
 
-	var archiveId = Number(location.search.split('?')[1]);
+  var archiveId = Number(location.search.split('?')[1]);
 
-	addEventListener("message", function(event) {
-		event.data.archiveId = archiveId;
-		chrome.extension.sendMessage(event.data);
-	}, false);
+  addEventListener("message", function(event) {
+    event.data.archiveId = archiveId;
+    console.log("chrome.extension.sendMessage(event.data");
+    chrome.extension.sendMessage(event.data);
+  }, false);
 
-	chrome.extension.sendMessage({
-		defaultStyle : true
-	}, function(style) {
-		parent.postMessage(JSON.stringify({
-			setDefaultStyle : true,
-			defaultStyle: style
-		}), "*");
-	});
+  console.log("chrome.extension.sendMessage({");
+  chrome.extension.sendMessage({
+    defaultStyle: true
+  }, function(style) {
+    console.log("parent.postMessage(JSON.stringify({");
+    parent.postMessage(JSON.stringify({
+      setDefaultStyle: true,
+      defaultStyle: style
+    }), "*");
+  });
 
 })();

@@ -205,6 +205,7 @@ function saveTabs(tabIds) {
   tabIds.forEach(function(tabId) {
     notifyTabProgress(tabId, 0, 0, 100);
   });
+  console.log("chrome.extension.sendMessage(SINGLE_FILE_ID, {");
   chrome.extension.sendMessage(SINGLE_FILE_ID, {
     tabIds: tabIds
   }, function() {});

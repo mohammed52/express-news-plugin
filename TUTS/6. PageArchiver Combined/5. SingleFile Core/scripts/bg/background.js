@@ -20,6 +20,7 @@
 
 (function() {
 
+  // when the background.js starts, DEFAULT_CONFIG and tabs, processingPagesCount and pageId is created
   var DEFAULT_CONFIG = {
     removeFrames: false,
     removeScripts: true,
@@ -105,6 +106,7 @@
       pageData.processableDocs = pageData.initializedDocs;
       pageData.initProcess();
       processingPagesCount++;
+      console.log("chrome.extension.sendMessage(pageData.senderId, {");
       chrome.extension.sendMessage(pageData.senderId, {
         processStart: true,
         tabId: pageData.tabId,
@@ -155,6 +157,7 @@
         progressMax += tabData.progressMax;
       }
     });
+    console.log("chrome.extension.sendMessage(pageData.senderId, {");
     chrome.extension.sendMessage(pageData.senderId, {
       processProgress: true,
       tabId: pageData.tabId,
@@ -174,7 +177,9 @@
   }
 
   /**
-   * processes each tab ??? calls executeScripts with tabIds and scripts, callback and index is left undefined
+   * process() - processes each tab ??? calls executeScripts with tabIds and scripts, 
+   * callback and index is left undefined
+   * call flow process->pageData->wininfo init->sends a message to the tab
    * @param  {integer} tabId            
    * @param  {object} senderId         id of the sender extension that sent request i.e. PageArchiver
    * @param  {object} config           settings for frames, scripts etc
@@ -185,16 +190,24 @@
     console.log("process(tabId, senderId, config, processSelection, processFrame)");
     var pageData,
       configScript;
+
+    // if processFrame is true, update values config.processInBackground and config.removeFrames
     if (processFrame) {
       config.processInBackground = true;
       config.removeFrames = false;
     }
+
+    // iniialise configScript obj, sets it to a string
     configScript = "singlefile.config = " + JSON.stringify(config) + "; singlefile.pageId = " + pageId + ";"
     + (processSelection ? "singlefile.processSelection = " + processSelection : "");
+
+    // 
     if (tabs[tabId] && tabs[tabId].processing)
       return;
     tabs[tabId] = tabs[tabId] || [];
     tabs[tabId].processing = true;
+
+    // the last method (executeScripts) is a call back, executesScripts on that particular page
     pageData = new singlefile.PageData(tabId, pageId, senderId, config, processSelection, processFrame, function() {
       executeScripts(tabId, [{
         code: "var singlefile = {};"
@@ -310,8 +323,16 @@
       process(request.id, sender.id, config, false, false);
     sendResponse({});
   }
+  // at the start of background.js, following two listeners are added:
+  // chrome.extension.onConnect no longer valid
+  // chrome.runtime.onConnect : fired when a connection is made from either an extension process or a content script
+  // by runtime.connect: attempts to connect listeners within an extension/app (such as the background page) or other extension/apps,
+  // this is useful for content scripts connecting to their extension processes, inter-app/extension communication
+  // and web messaging
 
   chrome.extension.onConnect.addListener(onConnect);
+
+  // 
   chrome.extension.onMessageExternal.addListener(onMessageExternal);
 
 })();

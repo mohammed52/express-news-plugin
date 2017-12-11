@@ -102,7 +102,12 @@
     var node,
       wrapper,
       clonedNode,
-      selection = getSelection(), // Returns a Selection object representing the range of text selected by the user or the current position of the caret
+
+      // Returns a Selection object representing the range of 
+      // text selected by the user or the current position of the caret
+      selection = getSelection(),
+
+      // The Selection.rangeCount read-only property returns the number of ranges in the selection
       range = selection.rangeCount ? selection.getRangeAt(0) : null;
     function addStyle(node) {
       console.log("addStyle(node)");
@@ -183,6 +188,7 @@
     console.log("sendFgProcessInit(title, url, baseURI, winId, winIndex)");
     var contextmenuTime = window.contextmenuTime;
     window.contextmenuTime = null;
+    console.log("bgPort.postMessage({");
     bgPort.postMessage({
       processInit: true,
       pageId: pageId,
@@ -202,6 +208,7 @@
     if (!this.wininfo)
       return;
     window.contextmenuTime = null;
+    console.log("bgPort.postMessage({");
     bgPort.postMessage({
       processInit: true,
       pageId: pageId,
@@ -225,7 +232,6 @@
    */
   function init() {
     console.log("init()");
-    debugger;
     var selectedContent = getSelectedContent(),
       topWindow = window == top;
 
@@ -370,6 +376,7 @@
 
       if (element.innerHTML) {
         if (config.processInBackground) {
+          console.log("bgPort.postMessage({");
           bgPort.postMessage({
             processDocFragment: true,
             pageId: pageId,
