@@ -116,6 +116,9 @@ var wininfo = {};
           index: i
         });
       }
+
+      // top is defined in bgcore->pageData, its set top=docData in bgcore->ProcessData
+      // win is window object passed to this method at execution
       if (win != top)
         console.log("win.postMessage(extensionId + \"::\" + stringify({");
 
@@ -129,13 +132,19 @@ var wininfo = {};
       //   corresponding to the origin of the main document in the window calling 
       //   window.postMessage at the time window.postMessage() was called, and a
       //    source property which is the window from which window.postMessage()
-      //     is called. (Other standard properties of events are present with their expected values.)
+      //     is called. (Other standard properties of events are present with 
+      //     their expected values.)
+      //     
+      // sends a message to the target window i.e. ->SingleFile->scriptsbg->wininfo listener
       win.postMessage(extensionId + "::" + stringify({
           initResponse: true,
           winId: winId,
           index: index
         }), "*");
+
       console.log("top.postMessage(extensionId + \"::\" + stringify({");
+
+      // sends a message to the target window i.e. ->SingleFile->scriptsbg->wininfo listener
       top.postMessage(extensionId + "::" + stringify({
           initResponse: true,
           frames: framesInfo,
