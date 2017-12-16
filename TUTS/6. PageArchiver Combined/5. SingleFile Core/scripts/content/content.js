@@ -36,6 +36,7 @@
     this.send = function(url, responseHandler, characterSet, mediaTypeParam) {
       console.log("this.send = function(url, responseHandler, characterSet, mediaTypeParam)");
       callbacks[requestId] = responseHandler;
+      console.log("bgPort.postMessage({");
       bgPort.postMessage({
         getResourceContentRequest: true,
         pageId: pageId,
@@ -160,6 +161,7 @@
       requestManager: requestManager,
       processDoc: singlefile.initProcess(doc, docElement, topWindow, doc.baseURI, doc.characterSet, config, canvasData, requestManager, function(
         maxIndex) {
+        console.log("bgPort.postMessage({");
         bgPort.postMessage({
           docInit: true,
           pageId: pageId,
@@ -167,6 +169,7 @@
           maxIndex: maxIndex
         });
       }, function(index) {
+        console.log("bgPort.postMessage({");
         bgPort.postMessage({
           docProgress: true,
           pageId: pageId,
@@ -174,6 +177,7 @@
           index: index
         });
       }, function() {
+        console.log("bgPort.postMessage({");
         bgPort.postMessage({
           docEnd: true,
           pageId: pageId,
@@ -471,6 +475,7 @@
   function setFrameContentRequest(message) {
     console.log("setFrameContentRequest(message)");
     docs[message.winId].frames[message.index].setAttribute("src", "data:text/html;charset=utf-8," + encodeURI(message.content));
+    console.log("bgPort.postMessage({");
     bgPort.postMessage({
       setFrameContentResponse: true,
       pageId: pageId,
@@ -481,20 +486,23 @@
 
   function getContentRequest(message) {
     console.log("getContentRequest(message)");
-    if (docs[message.winId].doc)
+    if (docs[message.winId].doc) {
+      console.log("bgPort.postMessage({");
       bgPort.postMessage({
         getContentResponse: true,
         winId: message.winId,
         pageId: pageId,
         content: singlefile.util.getDocContent(docs[message.winId].doc, docs[message.winId].docElement)
       });
-    else
+    } else {
+      console.log("bgPort.postMessage({");
       bgPort.postMessage({
         getContentResponse: true,
         pageId: pageId,
         winId: message.winId,
         content: singlefile.util.getDocContent(doc, docElement)
       });
+    }
   }
 
   function processDoc(message) {
@@ -503,6 +511,7 @@
       docs[message.winId].processDoc();
   }
 
+  console.log("bgPort = chrome.extension.connect({");
   bgPort = chrome.extension.connect({
     name: "singlefile"
   });

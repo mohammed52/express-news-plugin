@@ -278,6 +278,7 @@
     },
     process: function() {
       console.log("process: function()");
+      console.log("this.port.postMessage({");
       this.port.postMessage({
         processDoc: true,
         winId: this.winId
@@ -285,6 +286,7 @@
     },
     setDocFragment: function(content, mutationEventId) {
       console.log("setDocFragment: function(content, mutationEventId)");
+      console.log("this.port.postMessage({");
       this.port.postMessage({
         setDocFragment: true,
         content: content,
@@ -293,6 +295,7 @@
     },
     getResourceContentResponse: function(content, requestId) {
       console.log("getResourceContentResponse: function(content, requestId)");
+      console.log("this.port.postMessage({");
       this.port.postMessage({
         getResourceContentResponse: true,
         requestId: requestId,
@@ -302,6 +305,7 @@
     },
     setContent: function(content) {
       console.log("setContent: function(content)");
+      console.log("this.port.postMessage({");
       this.port.postMessage({
         setContentRequest: true,
         content: content,
@@ -311,6 +315,7 @@
     getContent: function(callback) {
       console.log("getContent: function(callback)");
       this.getContentCallback = callback;
+      console.log("this.port.postMessage({");
       this.port.postMessage({
         getContentRequest: true,
         winId: this.winId
@@ -319,6 +324,7 @@
     setFrameContent: function(docData, callback) {
       console.log("setFrameContent: function(docData, callback)");
       docData.setFrameContentCallback = callback;
+      console.log("this.port.postMessage({");
       this.port.postMessage({
         setFrameContentRequest: true,
         winId: this.winId,

@@ -165,6 +165,7 @@ var wininfo = {};
                 doctype;
               if (message.winId == frameWinId) {
                 doctype = getDoctype(frameDoc);
+                console.log("top.postMessage(extensionId + \"::\" + stringify({");
                 top.postMessage(extensionId + "::" + stringify({
                     getContentResponse: true,
                     contentRequestId: message.contentRequestId,
@@ -183,6 +184,7 @@ var wininfo = {};
             execute(extensionId, frameDoc.querySelectorAll("iframe, frame"), index, frameWinId, frameElement.contentWindow);
             addListener(onMessage);
           } else {
+            console.log("frameElement.contentWindow.postMessage(extensionId + \"::\" + stringify({");
             frameElement.contentWindow.postMessage(extensionId + "::" + stringify({
                 initRequest: true,
                 winId: frameWinId,
@@ -198,6 +200,7 @@ var wininfo = {};
     console.log("getContent(frame, callback)");
     if (frame.sameDomain) {
       contentRequestCallbacks.push(callback);
+      console.log("top.postMessage(EXT_ID + \"::\" + JSON.stringify({");
       top.postMessage(EXT_ID + "::" + JSON.stringify({
           getContentRequest: true,
           winId: frame.winId,
