@@ -178,6 +178,7 @@
 
   /**
    * process() - processes each tab ??? calls executeScripts with tabIds and scripts, 
+   * creates a new pagedata
    * callback and index is left undefined
    * call flow process->pageData->wininfo init->sends a message to the tab
    * @param  {integer} tabId            
@@ -207,7 +208,9 @@
     tabs[tabId] = tabs[tabId] || [];
     tabs[tabId].processing = true;
 
-    // the last method (executeScripts) is a call back, executesScripts on that particular page
+    // the last method of (exeuteScripts) is a call back, executesScripts on that particular page
+    // every process call creates a new pageData and registers a callback in it
+    // what is singlefile ???? singlefile object is created in scripts->bg->index.js
     pageData = new singlefile.PageData(tabId, pageId, senderId, config, processSelection, processFrame, function() {
       executeScripts(tabId, [{
         code: "var singlefile = {};"
