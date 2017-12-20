@@ -206,6 +206,7 @@ function saveTabs(tabIds) {
     notifyTabProgress(tabId, 0, 0, 100);
   });
   console.log("chrome.extension.sendMessage(SINGLE_FILE_ID, {");
+  // Single_File is the name of the other extension, sending a message to SingleFile extension
   chrome.extension.sendMessage(SINGLE_FILE_ID, {
     tabIds: tabIds
   }, function() {});
@@ -229,8 +230,12 @@ function resetDefaultFilters() {
   setDefaultFilters();
 }
 
+// the call back notifyHandler calls view.notifyTabProgress
+// view contains: tabId, state, index, max
 function notifyViews(notifyHandler) {
   console.log("notifyViews(notifyHandler)");
+  // returns an array of the JS window objects for each of the pages running inside the current extension
+
   chrome.extension.getViews().forEach(function(view) {
     if (view != this)
       notifyHandler(view);

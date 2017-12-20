@@ -219,7 +219,7 @@ var wininfo = {};
   }
 
   /**
-   * calls initResponse after 3 seconds, what is location ??, 
+   * calls initResponse after 3 seconds 
    * @param  {object} message contains index, initRequest and winId objects, initRequest is true
    */
   function initRequest(message) {
@@ -234,6 +234,9 @@ var wininfo = {};
         index: message.index
       });
     }, 3000);
+    // location is actually window.location, contains objects url, protocol, domain name etc...
+    // manuallu updating the location object ??? 
+    // href = url
     location.href = "javascript:(" + executeSetFramesWinIdString + ")('" + EXT_ID + "'," + wininfo.index + ",'" + wininfo.winId + "'); void 0;";
   }
 

@@ -23,7 +23,9 @@ var wininfo = {
   /**
    * init() - sends an message initRequest to door-quote page->wininfo script
    * @param  {integer}   tabId    id of tab to send the message to
-   * @param  {Function} callback declared in bgcore->PageData-> clears timeout, sets processableDocs calls the callback in parent
+   * @param  {Function} callback declared in bgcore->PageData-> clears timeout 
+   * calls the callback in parent
+   * processableDocs received in the listener, that.processableDocs set from the message.processableDocs received
    */
   init: function(tabId, callback) {
     console.log("init: function(tabId, callback)");
@@ -33,6 +35,7 @@ var wininfo = {
         callback(message.processableDocs);
     });
     console.log("chrome.tabs.sendMessage(tabId, {");
+    // send a message to a particular tabId, with params: winId, initRequest, index ...
     chrome.tabs.sendMessage(tabId, {
       initRequest: true,
       winId: "0",

@@ -23,7 +23,7 @@
   singlefile.PageData = PageData;
   singlefile.DocData = DocData;
   /**
-   * DONT KNOW ??? calls wininfo.init, 
+   * PageData - initialises a lot of this... objects,  
    * @param {integer}   tabId            
    * @param {integer}   pageId          var initialized to 0 in background.js, value is 1 in the first call
    * @param {string}   senderId         request sender extension ID i.e. PageArchiver
@@ -35,6 +35,8 @@
   function PageData(tabId, pageId, senderId, config, processSelection, processFrame, callback) {
     console.log("PageData(tabId, pageId, senderId, config, processSelection, processFrame, callback)");
     var timeoutError,
+      // that is used to get a reference to this e.g. in the in event Handlers
+      // used to set processableDocs in the wininfo.init call back ???
       that = this;
     this.pageId = pageId;
     this.docs = [];
@@ -47,7 +49,7 @@
     this.processFrame = processFrame;
     this.processing = true;
     this.tabId = tabId;
-    // creates a nio.RequestManager
+    // creates an instance of nio.RequestManager
     this.requestManager = new singlefile.nio.RequestManager();
     this.progressIndex = 0;
     this.progressMax = 0;
@@ -68,10 +70,13 @@
     }, 15000);
 
     // sends an message initRequest to the tab door-quote page->wininfo script
-    // second param is a call back
+    // second param is a call back, it calls the method executeScripts(... )
+    // wininfo.js is a global object defined in SingleFile Core\scripts\bg\wininfo.js, contains the init method declaration
+    // gets processableDocs from the particular tab/window and sets that.processabe.docs
     wininfo.init(tabId, function(processableDocs) {
       clearTimeout(timeoutError);
       that.processableDocs = processableDocs;
+      // the callback() calls executeScripts(... ) in the process() method
       callback();
     });
   }

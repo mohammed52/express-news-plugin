@@ -177,8 +177,8 @@
   }
 
   /**
-   * process() - processes each tab ??? calls executeScripts with tabIds and scripts, 
-   * creates a new pagedata
+   * process() - every process() call creates a new instance of PageData and calls executeScripts with tabIds and scripts, 
+   * creates a new PageData and configScrip objects
    * callback and index is left undefined
    * call flow process->pageData->wininfo init->sends a message to the tab
    * @param  {integer} tabId            
@@ -198,19 +198,23 @@
       config.removeFrames = false;
     }
 
-    // iniialise configScript obj, sets it to a string
+    // iniialise configScript obj, sets it to a string, singleFile is the name of the extension
     configScript = "singlefile.config = " + JSON.stringify(config) + "; singlefile.pageId = " + pageId + ";"
     + (processSelection ? "singlefile.processSelection = " + processSelection : "");
 
-    // 
+    // if the processing flag is set for the particular tabId, return ???
     if (tabs[tabId] && tabs[tabId].processing)
       return;
     tabs[tabId] = tabs[tabId] || [];
     tabs[tabId].processing = true;
 
-    // the last method of (exeuteScripts) is a call back, executesScripts on that particular page
-    // every process call creates a new pageData and registers a callback in it
-    // what is singlefile ???? singlefile object is created in scripts->bg->index.js
+    // the last method (i.e. exeuteScripts) is a call back, executesScripts on that particular page
+    // every process call executes a new pageData method and registers a callback in it
+    // what is singlefile ???? singlefile object is created in SingleFile Core\scripts\bg\index.js
+    // singleFile.PageData is a method, initialised in SingleFile Core\scripts\bg\bgcore.js
+    // all the bg scripts are defined and executed in the 
+    // manifest file bg.js, nio.js, wininfo.js, index.js, util.js, background.js etc at extension startup
+    // every 
     pageData = new singlefile.PageData(tabId, pageId, senderId, config, processSelection, processFrame, function() {
       executeScripts(tabId, [{
         code: "var singlefile = {};"
@@ -224,6 +228,8 @@
         file: "scripts/content/content.js"
       }]);
     });
+
+    // pageId is created in the SingleFile Core\scripts\bg\background.js
     tabs[tabId][pageId] = pageData;
     pageId++;
   }
@@ -302,7 +308,7 @@
     }
   }
   /**
-   * onMessageExternal
+   * onMessageExternal -- calls the process() method with the tabID, request.id, sender.id
    * @param  {array} request      array of tabIds
    * @param  {object} sender       id and url of the chrome plugin where the request came from
    * @param  {function} sendResponse callBack, call back may do nothing, check from the message sender

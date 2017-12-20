@@ -141,6 +141,7 @@
       searchInput.setAttribute("x-webkit-speech");
   };
 
+  // updates the UI elements
   this.notifyTabProgress = function(tabId, state, index, max) {
     console.log("this.notifyTabProgress = function(tabId, state, index, max)");
     var progressElement,
