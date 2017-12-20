@@ -36,7 +36,7 @@
     console.log("PageData(tabId, pageId, senderId, config, processSelection, processFrame, callback)");
     var timeoutError,
       // that is used to get a reference to this e.g. in the in event Handlers
-      // used to set processableDocs in the wininfo.init call back ???
+      // used to set processableDocs in the wininfo.init call back ??? processable docs is a count, normally set to 1
       that = this;
     this.pageId = pageId;
     this.docs = [];
@@ -72,7 +72,7 @@
     // sends an message initRequest to the tab door-quote page->wininfo script
     // second param is a call back, it calls the method executeScripts(... )
     // wininfo.js is a global object defined in SingleFile Core\scripts\bg\wininfo.js, contains the init method declaration
-    // gets processableDocs from the particular tab/window and sets that.processabe.docs
+    // gets processableDocs from the particular tab/window and sets that.processabe.docs, its a number usually 1
     wininfo.init(tabId, function(processableDocs) {
       clearTimeout(timeoutError);
       that.processableDocs = processableDocs;

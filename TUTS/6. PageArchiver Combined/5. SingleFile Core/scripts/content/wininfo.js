@@ -55,7 +55,7 @@ var wininfo = {};
     console.log("executeSetFramesWinId(extensionId, index, winId)");
 
     /**
-     * execute - WHAT DOES THIS DO ??? 
+     * execute - WHAT DOES THIS DO ???  iterative, calls itself, 
      * @param  {string} extensionId starting value is wininfo
      * @param  {array} elements    its a NodeList, starting is empty
      * @param  {integer} index       some index ???
@@ -226,38 +226,50 @@ var wininfo = {};
     console.log("initRequest(message)");
     wininfo.winId = message.winId;
     wininfo.index = message.index;
+    // why is initResponse being called with a 3 seconds delay ? why not call it immediately ???
+    // 
     timeoutInit = setTimeout(function() {
       initResponse({
         initResponse: true,
         frames: [],
-        winId: message.winId,
+        winId: message.winId, // = "0"
         index: message.index
       });
     }, 3000);
     // location is actually window.location, contains objects url, protocol, domain name etc...
-    // manuallu updating the location object ??? 
-    // href = url
+    // manually updating the location object ??? sets to a js method executeSetFrameWinIdString
+    // location.href = url // set the href to point to another web site... 
+    // point to an anchor within a page, point to an email address
+    // executeSetFramesWinIdString contains the whole method in a string format with params extensionId, index and winId as params
+    // executeSetFramesWinIdString is it returning a method
+    // location.href used in the content.js and execute()->onMessage()
     location.href = "javascript:(" + executeSetFramesWinIdString + ")('" + EXT_ID + "'," + wininfo.index + ",'" + wininfo.winId + "'); void 0;";
   }
 
   /**
-   * fired from onWindowMessage
+   * fired from onWindowMessage->initRequest
    * @param  {object} message contains index, frames, winId, initResponse
    */
   function initResponse(message) {
     console.log("initResponse(message)");
+
+    /**
+     * sends a message to SinglePage, with confirmation for initResponse and processableDocs = 1
+     */
     function process() {
       console.log("process()");
       wininfo.frames = wininfo.frames.filter(function(frame) {
         return frame.winId;
       });
       console.log("chrome.extension.sendMessage({");
+      // wininfo.frames.length == 0
+      // sends a message to the SingleFile chrome background page
       chrome.extension.sendMessage({
         initResponse: true,
         processableDocs: wininfo.frames.length + 1
       });
     }
-
+    // init response removes the timeout before finishing this method
     if (timeoutInit) {
       clearTimeout(timeoutInit);
       timeoutInit = null;
@@ -286,6 +298,7 @@ var wininfo = {};
   /**
    * onExtensionMessage, calls initRequest on the door-quote page, 
    * @param  {object} message contains objects: index, initRequest and winId
+   * message.winId is "0"
    */
   function onExtensionMessage(message) {
     console.log("onExtensionMessage(message)");

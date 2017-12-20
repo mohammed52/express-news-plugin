@@ -38,12 +38,13 @@
     processingPagesCount = 0,
     pageId = 0;
   /**
-   * executeScripts - 
-   * @param  {[type]}   tabId    [description]
-   * @param  {[type]}   scripts  [description]
-   * @param  {Function} callback [description]
-   * @param  {[type]}   index    [description]
-   * @return {[type]}            [description]
+   * executeScripts - call back used in PageData->wininfo init->initRequest->initResponse->process->executeScripts
+   * used to executeScripts on the page ???
+   * is a recursive method, calls itself until all scripts have been executed
+   * @param  {[integer]}   tabId    
+   * @param  {array}   scripts  mix of code and files to execute
+   * @param  {Function} callback undefined
+   * @param  {array}   index    index of the scripts array
    */
   function executeScripts(tabId, scripts, callback, index) {
     console.log("executeScripts(tabId, scripts, callback, index)");
