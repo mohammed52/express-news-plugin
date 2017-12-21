@@ -39,7 +39,7 @@
     pageId = 0;
   /**
    * executeScripts - call back used in PageData->wininfo init->initRequest->initResponse->process->executeScripts
-   * used to executeScripts on the page ???
+   * used to executeScripts on the page, executes 5 times for the 5 scripts in the array
    * is a recursive method, calls itself until all scripts have been executed
    * @param  {[integer]}   tabId    
    * @param  {array}   scripts  mix of code and files to execute

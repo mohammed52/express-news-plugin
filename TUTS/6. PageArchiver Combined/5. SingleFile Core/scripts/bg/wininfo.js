@@ -35,6 +35,11 @@ var wininfo = {
     // if you add break points and debug slowly addListener is called 11 times ???
     // message={initResponse: true, processableDocs: 1} is all cycles
     // sometimes this is called just twice or thrice, somethimes multiple times
+    // every time I save the page, this is called 2 x total number of times the page saved
+    // when I restarted chrome, was only printed once
+    // on the second save, 02 logs printed
+    // 3 on 3
+    // 
     chrome.extension.onMessage.addListener(function(message) {
       console.log("chrome.extension.onMessage.addListener(function(message)");
       if (message.initResponse)
