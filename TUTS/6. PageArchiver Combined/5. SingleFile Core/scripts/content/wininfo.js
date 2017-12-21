@@ -255,6 +255,7 @@ var wininfo = {};
 
     /**
      * sends a message to SinglePage, with confirmation for initResponse and processableDocs = 1
+     * 
      */
     function process() {
       console.log("process()");

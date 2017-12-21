@@ -29,6 +29,12 @@ var wininfo = {
    */
   init: function(tabId, callback) {
     console.log("init: function(tabId, callback)");
+
+    // this is being called 3 times followed by the executeScripts() call ???
+    // even though chrome .extension.sendMessage({...}) is only called once in the logs ???
+    // if you add break points and debug slowly addListener is called 11 times ???
+    // message={initResponse: true, processableDocs: 1} is all cycles
+    // sometimes this is called just twice or thrice, somethimes multiple times
     chrome.extension.onMessage.addListener(function(message) {
       console.log("chrome.extension.onMessage.addListener(function(message)");
       if (message.initResponse)

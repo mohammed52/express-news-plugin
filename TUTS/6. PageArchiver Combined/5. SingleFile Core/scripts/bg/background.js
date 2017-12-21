@@ -45,6 +45,12 @@
    * @param  {array}   scripts  mix of code and files to execute
    * @param  {Function} callback undefined
    * @param  {array}   index    index of the scripts array
+   * scripts array :
+   *    code: "var singlefile = {};"
+        file: "scripts/common/util.js"
+        file: "scripts/common/docprocessor.js"
+        code: configScript
+        file: "scripts/content/content.js"
    */
   function executeScripts(tabId, scripts, callback, index) {
     console.log("executeScripts(tabId, scripts, callback, index)");
