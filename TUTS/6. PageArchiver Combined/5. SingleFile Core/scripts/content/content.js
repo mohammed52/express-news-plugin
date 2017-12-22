@@ -97,9 +97,15 @@
         element.parentElement.removeChild(element);
     });
   }
-
+  // what does this do ???
+  /**
+   * [getSelectedContent description]
+   * @return {object} node - 
+   */
   function getSelectedContent() {
     console.log("getSelectedContent()");
+
+    // creates a new node object
     var node,
       wrapper,
       clonedNode,
@@ -109,6 +115,10 @@
       selection = getSelection(),
 
       // The Selection.rangeCount read-only property returns the number of ranges in the selection
+      // Range interface represents a fragment of a documment that can contain nodes and 
+      // parts of text nodes
+      // A range can be created using the createRange() method of the Document object
+      // getRangeAt() = retrieve range objects
       range = selection.rangeCount ? selection.getRangeAt(0) : null;
     function addStyle(node) {
       console.log("addStyle(node)");
@@ -126,11 +136,18 @@
         node.setAttribute("style", cssText);
       }
     }
-
+    // range.startOffset - returns a number representing where in the startContainer the Range start
+    // range.endOffset - returns a number representing where in the endContainer the Range ends
+    // div is a pure container, doesn't inherently represent anything
     if (range && range.startOffset != range.endOffset) {
+      // commonAncestorContainer - returns the deepest Node that contains the startContainer 
+      // and endContainer nodes
       node = range.commonAncestorContainer;
       if (node.nodeType != node.ELEMENT_NODE)
         node = node.parentElement;
+
+      // cloneNode([deep]); - returns a duplicate of the node on which thid method was called
+      // deep - true or false, whether to clone the children
       clonedNode = node.cloneNode(true);
       addStyle(node);
       node.parentElement.replaceChild(clonedNode, node);
