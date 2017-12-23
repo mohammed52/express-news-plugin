@@ -99,8 +99,8 @@
   }
   // what does this do ???
   /**
-   * [getSelectedContent description]
-   * @return {object} node - 
+   * getSelectedContent() - 
+   * returns a node, copies the node and all the childs, applies the styles
    */
   function getSelectedContent() {
     console.log("getSelectedContent()");
@@ -120,6 +120,10 @@
       // A range can be created using the createRange() method of the Document object
       // getRangeAt() = retrieve range objects
       range = selection.rangeCount ? selection.getRangeAt(0) : null;
+
+    /**
+     * addStyle - adds style to the node
+     */
     function addStyle(node) {
       console.log("addStyle(node)");
       var rules,
@@ -127,10 +131,13 @@
       Array.prototype.forEach.call(node.children, function(child) {
         addStyle(child);
       });
+      // window.getMatchedCSSRules - get all applied css rules of an element and its child elements
       rules = getMatchedCSSRules(node, '', false);
       if (rules) {
         cssText = "";
         Array.prototype.forEach.call(rules, function(rule) {
+          // rule.style.cssText - returns the actual text of a CSSStyleSheet style-rule
+          // converts css classes and all props into string
           cssText += rule.style.cssText;
         });
         node.setAttribute("style", cssText);
@@ -150,6 +157,8 @@
       // deep - true or false, whether to clone the children
       clonedNode = node.cloneNode(true);
       addStyle(node);
+
+      // 
       node.parentElement.replaceChild(clonedNode, node);
     }
     return node;
@@ -253,6 +262,7 @@
    */
   function init() {
     console.log("init()");
+    // getSelectedContent() - copies the top node and all the styles ??
     var selectedContent = getSelectedContent(),
       topWindow = window == top;
 
