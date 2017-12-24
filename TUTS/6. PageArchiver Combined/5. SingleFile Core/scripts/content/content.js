@@ -163,13 +163,20 @@
     }
     return node;
   }
-
+  /**
+   * converts all canvas nodes to dataUrls
+   * @param  {object} doc htmlDoc
+   * @return {array}     contains all canvas nodes converted into daraUrls
+   */
   function getCanvasData(doc) {
     console.log("getCanvasData(doc)");
     var canvasData = [];
     Array.prototype.forEach.call(doc.querySelectorAll("canvas"), function(node) {
       var data = null;
       try {
+        // HTMLCanvasElement.toDataURL() - returns a data uri , containing a representation of the image
+        // in the format specified by the type parameter, 
+        // the returned image in in a resolution of 06 dpi
         data = node.toDataURL("image/png", "");
       } catch ( e ) {}
       canvasData.push(data);
@@ -263,7 +270,10 @@
   function init() {
     console.log("init()");
     // getSelectedContent() - copies the top node and all the styles ??
+    // create a copy of the node and all child nodes
     var selectedContent = getSelectedContent(),
+      // window.top - returns a reference to the top most window in the window hierarchy
+      // topWindow - true/false
       topWindow = window == top;
 
     function doFgProcessInit() {
@@ -288,11 +298,15 @@
 
     function bgProcessInit() {
       console.log("bgProcessInit()");
+      debugger;
       var xhr;
+      // singleFile initialised in SingleFile->scripts->bg->index.js
+      // singleFile has util, initProcess, config, pageId objects and methods
       if (singlefile.processSelection) {
         if (selectedContent || !topWindow)
           sendBgProcessInit(topWindow ? singlefile.util.getDocContent(doc, selectedContent) : null);
       } else {
+        // config vars, loaded from DEFAULT_CONFIG in background.js
         if (config.getRawDoc && topWindow) {
           xhr = new XMLHttpRequest();
           xhr.onreadystatechange = function() {
@@ -352,6 +366,7 @@
       Array.prototype.forEach.call(doc.querySelectorAll("noscript"), function(node) {
         node.textContent = "";
       });
+      // getCanvasData - array of all canvas nodes converted into data uris
       canvasData = getCanvasData(doc);
       if (config.removeHidden)
         removeHiddenElements();
@@ -359,6 +374,7 @@
         document.documentElement.insertBefore(document.createComment("\n Archive processed by SingleFile \n url: " + location.href + " \n saved date: "
           + new Date() + " \n"), document.documentElement.firstChild);
     }
+    // if topWindow = true, or removeFrames && getRawDoc
     if ((!config.removeFrames && !config.getRawDoc) || topWindow)
       if (config.processInBackground)
         bgProcessInit();
@@ -538,6 +554,8 @@
       docs[message.winId].processDoc();
   }
 
+  // the content script only starts executing from this point, 
+  // before this code , only method declarations
   console.log("bgPort = chrome.extension.connect({");
   bgPort = chrome.extension.connect({
     name: "singlefile"
