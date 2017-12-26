@@ -83,6 +83,7 @@
 
   PageData.prototype = {
     initProcess: function() {
+      console.log("initProcess");
       var that = this;
       this.docs.forEach(function(docData) {
         if (that.config.processInBackground) {
@@ -96,12 +97,15 @@
       console.log("processDoc: function(port, topWindow, winId, index, content, title, url, baseURI, characterSet, canvasData, contextmenuTime, callbacks)");
       var that = this,
         docData;
+      // returns a set of DocData properties, bgCore method
       docData = new DocData(port, winId, index, content, baseURI, characterSet, canvasData);
       if (topWindow) {
         this.top = docData;
         this.title = title || "";
         this.url = url;
       }
+
+      // docData is pushed onto docs
       this.docs.push(docData);
       if (this.processFrame && contextmenuTime && (!this.contextmenuTime || contextmenuTime > this.contextmenuTime)) {
         this.contextmenuTime = contextmenuTime;
@@ -236,13 +240,17 @@
         docData.getResourceContentResponse(content, requestId);
       }, characterSet, mediaTypeParam);
     },
+
+    //  returns undefined
     getDocData: function(winId) {
       console.log("getDocData: function(winId)");
       var found;
+      // docs length is 0
       this.docs.forEach(function(docData) {
         if (docData.winId == winId)
           found = docData;
       });
+      // returns undefined
       return found;
     }
   };
@@ -268,6 +276,7 @@
 
   DocData.prototype = {
     parseContent: function() {
+      console.log("parseContent");
       var doc = document.implementation.createHTMLDocument();
       doc.open();
       doc.write(this.content);

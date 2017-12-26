@@ -72,9 +72,13 @@
 
   function processInit(tabId, port, message) {
     console.log("processInit(tabId, port, message)");
+
+    // tabs = Singlefile.tabs, contains as many tabs as many times you execute the save tab process
     var pageData = tabs[tabId][message.pageId];
     pageData.portsId.push(port.portId_);
+    // pageData.getDocData is a bgCore method, returns undefined
     if (!pageData.getDocData(message.winId))
+      // pageData.processDoc is a bgCore method
       pageData.processDoc(port, message.topWindow, message.winId, message.index, message.content, message.title, message.url, message.baseURI,
         message.characterSet, message.canvasData, message.contextmenuTime, {
           init: docInit,
@@ -275,6 +279,7 @@
           deletePageData(pageData);
     }
 
+    // called when message received from door-quote page script, onMessage calls process Init
     function onMessage(message) {
       console.log("onMessage(message)");
       var pageData,
