@@ -105,6 +105,7 @@ function open(id, selected, editMode) {
   if (popupState.newPages[id])
     popupState.newPages[id] = false;
   getArchiveURL(id, editMode, function(url) {
+    console.log('getArchiveURL(id, editMode, function(url) {');
     chrome.tabs.create({
       url: url,
       selected: selected
@@ -129,6 +130,7 @@ function openLink(url) {
 function getSelectedTab(callback) {
   console.log("getSelectedTab(callback)");
   chrome.tabs.getSelected(null, function(tab) {
+    console.log('chrome.tabs.getSelected(null, function(tab) {');
     callback(tab);
   });
 }
@@ -150,6 +152,7 @@ function detectSingleFile(callback) {
 function getTabsInfo(callback) {
   console.log("getTabsInfo(callback)");
   chrome.tabs.getAllInWindow(null, function(tabs) {
+    console.log('chrome.tabs.getAllInWindow(null, function(tabs) {');
     if (popupState.searchedTabs)
       tabs = tabs.filter(function(tab) {
         var i,
@@ -210,6 +213,7 @@ function saveTabs(tabIds) {
   chrome.extension.sendMessage(SINGLE_FILE_ID, {
     tabIds: tabIds
   }, function() {});
+  console.log('}, function() {});');
 }
 
 function selectTab(tabId) {
@@ -255,6 +259,7 @@ function importDB() {
           view.notifyImportProgress();
       });
     }, function() {
+      console.log('}, function() {');
       process.importing = null;
       notifyViews(function(view) {
         if (view.notifyImportProgress)
@@ -284,6 +289,7 @@ function exportDB() {
           view.notifyExportProgress();
       });
     }, function() {
+      console.log('}, function() {');
       process.exporting = null;
       notifyViews(function(view) {
         if (view.notifyExportProgress)
@@ -317,12 +323,14 @@ function exportToZip(checkedPages, filename) {
   process.exportingToZip = true;
   refreshBadge("0%", "exporting to zip...");
   storage.exportToZip(checkedPages, filename, options.compress == "yes", function(index, max) {
+    console.log('storage.exportToZip(checkedPages, filename, options.compress == "yes", function(index, max) {');
     var pct = Math.floor((index / max) * 100);
     if (pct != pctIndex) {
       refreshBadge(Math.floor((index / max) * 100) + "%", "exporting to zip...");
       pctIndex = pct;
     }
   }, function(url) {
+    console.log('}, function(url) {');
     var notificationExportOK;
     process.exportingToZip = false;
     refreshBadge("", "");
@@ -346,12 +354,14 @@ function importFromZip(file) {
   process.importingFromZip = true;
   refreshBadge("0%", "importing from zip...");
   storage.importFromZip(file, function(index, max) {
+    console.log('storage.importFromZip(file, function(index, max) {');
     var pct = Math.floor((index / max) * 100);
     if (pct != pctIndex) {
       refreshBadge(Math.floor((index / max) * 100) + "%", "importing from zip...");
       pctIndex = pct;
     }
   }, function() {
+    console.log('}, function() {');
     var notificationImportOK;
     process.importingFromZip = false;
     refreshBadge("", "");
@@ -367,12 +377,14 @@ function createNewNote(title) {
   console.log("createNewNote(title)");
   storage.addContent("<!doctype html><html><head><title>" + title + "</title></head><body><div style='min-height: 1.5em;'></div></body></html>", title, null,
     null, function(id) {
+      console.log('null, function(id) {');
       console.log("storage.addContent");
       open(id, true, true);
       if (options.expandNewArchive == "yes")
         popupState.newPages[id] = true;
     }, function() {
-      // error
+      console.log('}, function() {');
+    // error
     });
 }
 ;
@@ -408,6 +420,7 @@ function notifyTabProgress(tabId, state, index, max) {
 function openPopup() {
   console.log("openPopup()");
   chrome.tabs.getAllInWindow(null, function(tabs) {
+    console.log('chrome.tabs.getAllInWindow(null, function(tabs) {');
     var foundId;
     tabs.forEach(function(tab) {
       if (tab.url.indexOf(chrome.extension.getURL("pages/popup.html?newtab")) == 0)
@@ -444,6 +457,7 @@ chrome.omnibox.onInputChanged.addListener(function(text, suggestCallback) {
       storage.search({
         text: text.split(" ")
       }, true, function(rows, tags, count) {
+        console.log('}, true, function(rows, tags, count) {');
         var description,
           i,
           suggestions = [];
@@ -513,9 +527,11 @@ chrome.extension.onMessageExternal.addListener(function(request, sender, sendRes
   else if (request.processEnd) {
     notifyTabProgress(request.tabId, 2);
     storage.addContent(request.content, request.title, request.url, request.favicoData, function(id) {
+      console.log('storage.addContent(request.content, request.title, request.url, request.favicoData, function(id) {');
       if (options.expandNewArchive == "yes")
         popupState.newPages[id] = true;
     }, function() {
+      console.log('}, function() {');
       webkitNotifications.createNotification("../resources/icon_48.png", "PageArchiver", "Error when saving the archive on disk");
     });
     sendResponse({});

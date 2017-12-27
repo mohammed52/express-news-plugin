@@ -31,6 +31,7 @@
   function selectAllButtonOnclick() {
     console.log("selectAllButtonOnclick()");
     Array.prototype.forEach.call(document.querySelectorAll("#tab-tabs li input[type=checkbox]"), function(inputElement) {
+      console.log('Array.prototype.forEach.call(document.querySelectorAll("#tab-tabs li input[type=checkbox]"), function(inputElement) {');
       inputElement.checked = selectAllButton.checked;
     });
   }
@@ -40,6 +41,7 @@
 
     var uncheckedCount = 0;
     Array.prototype.forEach.call(document.querySelectorAll("#tab-tabs li input[type=checkbox]"), function(inputElement) {
+      console.log('Array.prototype.forEach.call(document.querySelectorAll("#tab-tabs li input[type=checkbox]"), function(inputElement) {');
       if (!inputElement.checked)
         uncheckedCount++;
     });
@@ -50,6 +52,7 @@
     console.log("saveButtonOnclick()");
     var selectedIds = [];
     Array.prototype.forEach.call(document.querySelectorAll("#tab-tabs li input[type=checkbox]"), function(inputElement) {
+      console.log('Array.prototype.forEach.call(document.querySelectorAll("#tab-tabs li input[type=checkbox]"), function(inputElement) {');
       if (inputElement.checked)
         selectedIds.push(Number(inputElement.parentElement.id.split("tab.")[1]));
     });

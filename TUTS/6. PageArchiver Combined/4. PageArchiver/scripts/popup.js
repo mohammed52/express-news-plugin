@@ -101,6 +101,7 @@
     initTabsTab();
     initTagsTab();
     showTab(bgPage.tab || "pages", function() {
+      console.log('showTab(bgPage.tab || "pages", function() {');
       var loader = document.getElementById("loader");
       if (state.firstUse) {
         showTab("firstUse");
