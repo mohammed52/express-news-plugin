@@ -74,6 +74,7 @@
     // wininfo.js is a global object defined in SingleFile Core\scripts\bg\wininfo.js, contains the init method declaration
     // gets processableDocs from the particular tab/window and sets that.processabe.docs, its a number usually 1
     wininfo.init(tabId, function(processableDocs) {
+      console.log('wininfo.init(tabId, function(processableDocs) {');
       clearTimeout(timeoutError);
       that.processableDocs = processableDocs;
       // the callback() calls executeScripts(... ) in the process() method
@@ -115,10 +116,13 @@
         docData.parseContent();
         docData.processDocCallback = singlefile.initProcess(docData.doc, docData.doc.documentElement, topWindow, baseURI, characterSet, this.config,
           canvasData, this.requestManager, function(maxIndex) {
+            console.log('canvasData, this.requestManager, function(maxIndex) {');
             callbacks.init(that, docData, maxIndex);
           }, function(index, maxIndex) {
+            console.log('}, function(index, maxIndex) {');
             callbacks.progress(that, docData, index);
           }, function() {
+            console.log('}, function() {');
             callbacks.end(that, docData);
           });
       }
@@ -129,8 +133,10 @@
       doc.body.innerHTML = content;
       docData.processDocCallback = singlefile.initProcess(doc, doc.documentElement, this.top == docData, docData.baseURI, docData.characterSet,
         this.config, null, this.requestManager, function() {
+          console.log('this.config, null, this.requestManager, function() {');
           docData.processDocCallback();
         }, null, function() {
+          console.log('}, null, function() {');
           docData.setDocFragment(doc.body.innerHTML, mutationEventId);
         });
     },
@@ -146,9 +152,11 @@
           var parent = docData.parent;
           if (parent)
             setFrameContent(docData, function() {
+              console.log('setFrameContent(docData, function() {');
               parent.processedChildren++;
               if (parent.processedChildren == parent.childrenLength)
                 getContent(parent, function() {
+                  console.log('getContent(parent, function() {');
                   setContent(parent);
                 });
             });
@@ -202,6 +210,7 @@
           selectedDocData = this.top;
         if (this.config.processInBackground)
           buildPage(selectedDocData, function(docData, callback) {
+            console.log('buildPage(selectedDocData, function(docData, callback) {');
             var content = encodeURI(singlefile.util.getDocContent(docData.doc)),
               maxFrameSize = that.config.maxFrameSize;
             if (maxFrameSize > 0 && content.length > maxFrameSize * 1024 * 1024)
@@ -210,16 +219,21 @@
             delete docData.doc;
             callback();
           }, function(docData, callback) {
+            console.log('}, function(docData, callback) {');
             callback();
           }, function(docData) {
+            console.log('}, function(docData) {');
             bgPageEnd(that, docData, callback);
           });
         else
           buildPage(this.top, function(docData, callback) {
+            console.log('buildPage(this.top, function(docData, callback) {');
             docData.parent.setFrameContent(docData, callback);
           }, function(docData, callback) {
+            console.log('}, function(docData, callback) {');
             docData.getContent(callback);
           }, function(docData) {
+            console.log('}, function(docData) {');
             docData.setContent();
           });
       }
@@ -237,6 +251,7 @@
     getResourceContentRequest: function(url, requestId, winId, characterSet, mediaTypeParam, docData) {
       console.log("getResourceContentRequest: function(url, requestId, winId, characterSet, mediaTypeParam, docData)");
       this.requestManager.send(url, function(content) {
+        console.log('this.requestManager.send(url, function(content) {');
         docData.getResourceContentResponse(content, requestId);
       }, characterSet, mediaTypeParam);
     },

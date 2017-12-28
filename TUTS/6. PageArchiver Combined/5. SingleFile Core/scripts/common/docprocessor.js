@@ -93,6 +93,7 @@
   function resolveURLs(content, host) {
     console.log("resolveURLs(content, host)");
     var ret = content.replace(URL_EXP, function(value) {
+      console.log('var ret = content.replace(URL_EXP, function(value) {');
       var result = value.match(URL_VALUE_EXP);
       if (result)
         if (result[1].indexOf("data:") != 0)
@@ -100,6 +101,7 @@
       return value;
     });
     return ret.replace(IMPORT_ALT_EXP, function(value) {
+      console.log('return ret.replace(IMPORT_ALT_EXP, function(value) {');
       var result = value.match(IMPORT_VALUE_ALT_EXP);
       if (result)
         if (result[1].indexOf("data:") != 0)
@@ -142,6 +144,7 @@
       console.log("sendRequest(origUrl)");
       requestMax++;
       requestManager.send(url, function(data) {
+        console.log('requestManager.send(url, function(data) {');
         requestIndex++;
         if (content.indexOf(origUrl) != -1) {
           data.mediaType = data.mediaType ? data.mediaType.split(";")[0] : null;
@@ -169,6 +172,7 @@
   function processStylesheets(doc, docElement, baseURI, requestManager) {
     console.log("processStylesheets(doc, docElement, baseURI, requestManager)");
     Array.prototype.forEach.call(docElement.querySelectorAll('link[href][rel*="stylesheet"]'), function(node) {
+      console.log(', function(node) {');
       var href = node.getAttribute("href"),
         url = formatURL(href, baseURI);
 
@@ -194,6 +198,7 @@
 
       if (href.indexOf("data:") != 0)
         requestManager.send(url, function(data) {
+          console.log('requestManager.send(url, function(data) {');
           if (data.status >= 400)
             node.parentElement.removeChild(node);
           else
@@ -208,6 +213,7 @@
     console.log("processImports(docElement, baseURI, characterSet, requestManager)");
     var ret = true;
     Array.prototype.forEach.call(docElement.querySelectorAll("style"), function(styleSheet) {
+      console.log('Array.prototype.forEach.call(docElement.querySelectorAll("style"), function(styleSheet) {');
       var imports = removeComments(styleSheet.textContent).match(IMPORT_EXP);
       if (imports)
         imports.forEach(function(imp) {
@@ -225,6 +231,7 @@
             url = formatURL(href, styleSheet.dataset.href || baseURI);
             if (href.indexOf("data:") != 0) {
               requestManager.send(url, function(data) {
+                console.log('requestManager.send(url, function(data) {');
                 insertStylesheet(data.status < 400 && data.content ? data.content : "");
               }, null, characterSet);
             } else
@@ -239,7 +246,9 @@
   function processStyleAttributes(docElement, baseURI, requestManager) {
     console.log("processStyleAttributes(docElement, baseURI, requestManager)");
     Array.prototype.forEach.call(docElement.querySelectorAll("*[style]"), function(node) {
+      console.log('Array.prototype.forEach.call(docElement.querySelectorAll("*[style]"), function(node) {');
       replaceURLs(node.getAttribute("style"), baseURI, requestManager, function(style) {
+        console.log('replaceURLs(node.getAttribute("style"), baseURI, requestManager, function(style) {');
         node.setAttribute("style", style);
       });
     });
@@ -249,12 +258,14 @@
     console.log("processBgAttributes(docElement, baseURI, requestManager)");
     var backgrounds = docElement.querySelectorAll("*[background]");
     Array.prototype.forEach.call(backgrounds, function(node) {
+      console.log('Array.prototype.forEach.call(backgrounds, function(node) {');
       var url,
         value = node.getAttribute("background");
       if (value.indexOf(".") != -1) {
         url = formatURL(value, baseURI);
         if (url.indexOf("data:") != 0)
           requestManager.send(url, function(data) {
+            console.log('requestManager.send(url, function(data) {');
             node.setAttribute("background", getDataURI(data, EMPTY_PIXEL_DATA, true));
           }, null, "base64");
       }
@@ -283,9 +294,11 @@
     function process(attributeName) {
       console.log("process(attributeName)");
       Array.prototype.forEach.call(images, function(node) {
+        console.log('Array.prototype.forEach.call(images, function(node) {');
         var url = formatURL(node.getAttribute(attributeName), baseURI);
         if (url.indexOf("data:") != 0)
           requestManager.send(url, function(data) {
+            console.log('requestManager.send(url, function(data) {');
             node.setAttribute(attributeName, getDataURI(data, EMPTY_PIXEL_DATA, true));
           }, null, "base64");
       });
@@ -304,11 +317,13 @@
     console.log("processSVGs(docElement, baseURI, requestManager)");
     var images = docElement.querySelectorAll('object[type="image/svg+xml"], object[type="image/svg-xml"], embed[src*=".svg"]');
     Array.prototype.forEach.call(images, function(node) {
+      console.log('Array.prototype.forEach.call(images, function(node) {');
       var data = node.getAttribute("data"),
         src = node.getAttribute("src"),
         url = formatURL(data || src, baseURI);
       if (url.indexOf("data:") != 0)
         requestManager.send(url, function(data) {
+          console.log('requestManager.send(url, function(data) {');
           node.setAttribute(data ? "data" : "src", getDataURI(data, "data:text/xml,<svg></svg>", true));
         }, null, null);
     });
@@ -317,7 +332,9 @@
   function processStyles(docElement, baseURI, requestManager) {
     console.log("processStyles(docElement, baseURI, requestManager)");
     Array.prototype.forEach.call(docElement.querySelectorAll("style"), function(styleSheet) {
+      console.log('Array.prototype.forEach.call(docElement.querySelectorAll("style"), function(styleSheet) {');
       replaceURLs(styleSheet.textContent, styleSheet.dataset.href || baseURI, requestManager, function(textContent) {
+        console.log('replaceURLs(styleSheet.textContent, styleSheet.dataset.href || baseURI, requestManager, function(textContent) {');
         styleSheet.textContent = textContent;
       });
     });
@@ -326,9 +343,11 @@
   function processScripts(docElement, baseURI, characterSet, requestManager) {
     console.log("processScripts(docElement, baseURI, characterSet, requestManager)");
     Array.prototype.forEach.call(docElement.querySelectorAll("script[src]"), function(node) {
+      console.log('Array.prototype.forEach.call(docElement.querySelectorAll("script[src]"), function(node) {');
       var src = node.getAttribute("src");
       if (src.indexOf("data:") != 0)
         requestManager.send(formatURL(src, baseURI), function(data) {
+          console.log('requestManager.send(formatURL(src, baseURI), function(data) {');
           if (data.status < 400) {
             data.content = data.content.replace(/"([^"]*)<\/\s*script\s*>([^"]*)"/gi, '"$1<"+"/script>$2"');
             data.content = data.content.replace(/'([^']*)<\/\s*script\s*>([^']*)'/gi, "'$1<'+'/script>$2'");
@@ -343,6 +362,7 @@
     console.log("processCanvas(doc, docElement, canvasData)");
     var index = 0;
     Array.prototype.forEach.call(docElement.querySelectorAll("canvas"), function(node) {
+      console.log('Array.prototype.forEach.call(docElement.querySelectorAll("canvas"), function(node) {');
       var i,
         data = canvasData[index],
         newNode = doc.createElement("img");
@@ -364,9 +384,11 @@
   function removeScripts(docElement) {
     console.log("removeScripts(docElement)");
     Array.prototype.forEach.call(docElement.querySelectorAll("script"), function(node) {
+      console.log('Array.prototype.forEach.call(docElement.querySelectorAll("script"), function(node) {');
       node.parentElement.removeChild(node);
     });
     Array.prototype.forEach.call(docElement.querySelectorAll("*[onload]"), function(node) {
+      console.log('Array.prototype.forEach.call(docElement.querySelectorAll("*[onload]"), function(node) {');
       node.removeAttribute("onload");
     });
   }
@@ -375,10 +397,12 @@
     console.log("removeObjects(docElement)");
     var objects = docElement.querySelectorAll('applet, object:not([type="image/svg+xml"]):not([type="image/svg-xml"]), embed:not([src*=".svg"])');
     Array.prototype.forEach.call(objects, function(node) {
+      console.log('Array.prototype.forEach.call(objects, function(node) {');
       node.parentElement.removeChild(node);
     });
     objects = docElement.querySelectorAll('audio[src], video[src]');
     Array.prototype.forEach.call(objects, function(node) {
+      console.log('Array.prototype.forEach.call(objects, function(node) {');
       node.removeAttribute("src");
     });
   }
@@ -386,6 +410,7 @@
   function removeBlockquotesCite(docElement) {
     console.log("removeBlockquotesCite(docElement)");
     Array.prototype.forEach.call(docElement.querySelectorAll("blockquote[cite]"), function(node) {
+      console.log('Array.prototype.forEach.call(docElement.querySelectorAll("blockquote[cite]"), function(node) {');
       node.removeAttribute("cite");
     });
   }
@@ -393,6 +418,7 @@
   function removeFrames(docElement) {
     console.log("removeFrames(docElement)");
     Array.prototype.forEach.call(docElement.querySelectorAll("iframe, frame"), function(node) {
+      console.log('Array.prototype.forEach.call(docElement.querySelectorAll("iframe, frame"), function(node) {');
       node.parentElement.removeChild(node);
     });
   }
@@ -400,6 +426,7 @@
   function removeMetaRefresh(docElement) {
     console.log("removeMetaRefresh(docElement)");
     Array.prototype.forEach.call(docElement.querySelectorAll("meta[http-equiv=refresh]"), function(node) {
+      console.log('Array.prototype.forEach.call(docElement.querySelectorAll("meta[http-equiv=refresh]"), function(node) {');
       node.parentElement.removeChild(node);
     });
   }
@@ -407,6 +434,7 @@
   function resetFrames(docElement, baseURI) {
     console.log("resetFrames(docElement, baseURI)");
     Array.prototype.forEach.call(docElement.querySelectorAll("iframe, frame"), function(node) {
+      console.log('Array.prototype.forEach.call(docElement.querySelectorAll("iframe, frame"), function(node) {');
       var src = formatURL(node.getAttribute("src"), baseURI);
       if (src.indexOf("data:") != 0)
         node.setAttribute("src", "about:blank");
@@ -416,6 +444,7 @@
   function setAbsoluteLinks(docElement, baseURI) {
     console.log("setAbsoluteLinks(docElement, baseURI)");
     Array.prototype.forEach.call(docElement.querySelectorAll("a:not([href^='#'])"), function(link) {
+      console.log(', function(link) {');
       var fullHref = formatURL(link.getAttribute("href"), baseURI);
       if (fullHref && (!(fullHref.indexOf(baseURI.split("#")[0]) == 0) || fullHref.indexOf("#") == -1))
         link.setAttribute("href", fullHref);
@@ -449,6 +478,7 @@
         console.log("this.doSend = function()");
         requests.forEach(function(request) {
           requestManager.send(request.url, function(response) {
+            console.log('requestManager.send(request.url, function(response) {');
             request.responseHandler(response);
             currentCount++;
             if (onProgress)

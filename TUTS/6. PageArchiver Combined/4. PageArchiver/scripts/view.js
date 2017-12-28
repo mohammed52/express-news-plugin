@@ -19,5 +19,6 @@
  */
 
 chrome.extension.getBackgroundPage().getArchiveURL(Number(location.search.split('?')[1]), false, function(url) {
-	location.replace(url);
+  console.log("function(url) {");
+  location.replace(url);
 });

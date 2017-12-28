@@ -223,6 +223,7 @@
       if (!that.data) {
         request = new XMLHttpRequest();
         request.addEventListener("load", function() {
+          console.log('request.addEventListener("load", function() {');
           if (!that.size)
             that.size = Number(request.getResponseHeader("Content-Length"));
           that.data = new Uint8Array(request.response);
@@ -240,6 +241,7 @@
       console.log("init(callback, onerror)");
       var request = new XMLHttpRequest();
       request.addEventListener("load", function() {
+        console.log('request.addEventListener("load", function() {');
         that.size = Number(request.getResponseHeader("Content-Length"));
         callback();
       }, false);
@@ -270,6 +272,7 @@
       console.log("init(callback, onerror)");
       var request = new XMLHttpRequest();
       request.addEventListener("load", function() {
+        console.log('request.addEventListener("load", function() {');
         that.size = Number(request.getResponseHeader("Content-Length"));
         if (request.getResponseHeader("Accept-Ranges") == "bytes")
           callback();
@@ -288,6 +291,7 @@
       request.responseType = "arraybuffer";
       request.setRequestHeader("Range", "bytes=" + index + "-" + (index + length - 1));
       request.addEventListener("load", function() {
+        console.log('request.addEventListener("load", function() {');
         callback(request.response);
       }, false);
       request.addEventListener("error", onerror, false);
@@ -483,6 +487,7 @@
       if (message.onappend) {
         outputSize += data.length;
         writer.writeUint8Array(data, function() {
+          console.log('writer.writeUint8Array(data, function() {');
           onappend(false, data);
           step();
         }, onwriteerror);
@@ -491,6 +496,7 @@
         if (data) {
           outputSize += data.length;
           writer.writeUint8Array(data, function() {
+            console.log('writer.writeUint8Array(data, function() {');
             onappend(false, data);
             onflush();
           }, onwriteerror);
@@ -538,12 +544,14 @@
       if (index < size)
         reader.readUint8Array(offset + index, Math.min(CHUNK_SIZE, size - index), function(inputData) {
           var outputData = process.append(inputData, function() {
+            console.log('var outputData = process.append(inputData, function() {');
             if (onprogress)
               onprogress(offset + index, size);
           });
           outputSize += outputData.length;
           onappend(true, inputData);
           writer.writeUint8Array(outputData, function() {
+            console.log('writer.writeUint8Array(outputData, function() {');
             onappend(false, outputData);
             chunkIndex++;
             setTimeout(step, 1);
@@ -556,6 +564,7 @@
         if (outputData) {
           outputSize += outputData.length;
           writer.writeUint8Array(outputData, function() {
+            console.log('writer.writeUint8Array(outputData, function() {');
             onappend(false, outputData);
             onend(outputSize);
           }, onwriteerror);
@@ -640,6 +649,7 @@
           if (onprogress)
             onprogress(index, size, array);
           writer.writeUint8Array(array, function() {
+            console.log('writer.writeUint8Array(array, function() {');
             chunkIndex++;
             step();
           }, onwriteerror);
@@ -831,6 +841,7 @@
           entriesCallback(dataView);
         }
       }, function() {
+        console.log('}, function() {');
         onerror(ERR_READ);
       });
     }
@@ -879,6 +890,7 @@
             }
             callback(entries);
           }, function() {
+            console.log('}, function() {');
             onerror(ERR_READ);
           });
         });
@@ -1010,6 +1022,7 @@
             header.view.setUint32(18, reader.size, true);
           }
           writer.writeUint8Array(footer.array, function() {
+            console.log('writer.writeUint8Array(footer.array, function() {');
             datalength += 16;
             terminate(onend);
           }, onwriteerror);
@@ -1070,6 +1083,7 @@
         data.view.setUint32(index + 12, length, true);
         data.view.setUint32(index + 16, datalength, true);
         writer.writeUint8Array(data.array, function() {
+          console.log('writer.writeUint8Array(data.array, function() {');
           terminate(function() {
             writer.getData(callback);
           });

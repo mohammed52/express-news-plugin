@@ -64,6 +64,7 @@
         code: scripts[index].code,
         allFrames: true
       }, function() {
+        console.log('}, function() {');
         executeScripts(tabId, scripts, callback, index + 1);
       });
     else if (callback)
@@ -227,6 +228,7 @@
     // manifest file bg.js, nio.js, wininfo.js, index.js, util.js, background.js etc at extension startup
     // every 
     pageData = new singlefile.PageData(tabId, pageId, senderId, config, processSelection, processFrame, function() {
+      console.log('pageData = new singlefile.PageData(tabId, pageId, senderId, config, processSelection, processFrame, function() {');
       executeScripts(tabId, [{
         code: "var singlefile = {};"
       }, {

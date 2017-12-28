@@ -59,13 +59,17 @@ var storage = {};
     createDatabase();
     if (typeof requestFS != "undefined") {
       requestFS(true, DATA_SIZE, function(filesystem) {
+        console.log('requestFS(true, DATA_SIZE, function(filesystem) {');
         fs = filesystem;
       }, function() {
+        console.log('}, function() {');
         options.filesystemEnabled = "";
       });
       requestFS(TEMPORARY, TMP_DATA_SIZE, function(filesystem) {
+        console.log('requestFS(TEMPORARY, TMP_DATA_SIZE, function(filesystem) {');
         tmpfs = filesystem;
       }, function() {
+        console.log('}, function() {');
         options.filesystemEnabled = "";
       });
     }
@@ -92,12 +96,14 @@ var storage = {};
         onprogress(index, rows.length);
         id = rows.item(index).id;
         fs.root.getFile(id + ".html", null, function(fileEntry) {
+          console.log('fs.root.getFile(id + ".html", null, function(fileEntry) {');
           var fileReader = new FileReader();
           fileReader.onload = function(evt) {
             console.log("fileReader.onload = function(evt)");
             content = removeNullChar(evt.target.result);
             db.transaction(function(tx) {
               tx.executeSql("insert into pages_contents (id, content) values (?,?)", [id, content], function() {
+                console.log('tx.executeSql("insert into pages_contents (id, content) values (?,?)", [id, content], function() {');
                 fileEntry.remove(importNextContent, importNextContent);
               }, importNextContent);
             }, importNextContent);
@@ -111,8 +117,10 @@ var storage = {};
     }
     db.transaction(function(tx) {
       tx.executeSql("select id from pages where id not in (select id from pages_contents)", [], function(cbTx, result) {
+        console.log('tx.executeSql("select id from pages where id not in (select id from pages_contents)", [], function(cbTx, result) {');
         importContent(result.rows, 0);
       }, function() {
+        console.log('}, function() {');
         onfinish();
       });
     });
@@ -160,6 +168,7 @@ var storage = {};
       console.log("exportContent(pageIds)");
       var id = pageIds[exportIndex];
       storage.getContent(id, function(content, title) {
+        console.log('storage.getContent(id, function(content, title) {');
         var newDoc,
           commentNode,
           name;
@@ -176,12 +185,14 @@ var storage = {};
         db.transaction(function(tx) {
           var query = "select title, timestamp, read_timestamp, idx from pages where id=?";
           tx.executeSql(query, [id], function(cbTx, result) {
+            console.log('tx.executeSql(query, [id], function(cbTx, result) {');
             var pageMetadata,
               tags = [],
               query = "select tag from tags, pages_tags where pages_tags.tag_id = tags.id and pages_tags.page_id=?";
             if (result.rows.length)
               pageMetadata = result.rows.item(0);
             tx.executeSql(query, [id], function(cbTx, result) {
+              console.log('tx.executeSql(query, [id], function(cbTx, result) {');
               var i,
                 blob,
                 fileReader;
@@ -196,6 +207,7 @@ var storage = {};
                 type: "text/html"
               });
               zipWriter.add(name, new zip.BlobReader(blob), function() {
+                console.log('zipWriter.add(name, new zip.BlobReader(blob), function() {');
                 exportIndex++;
                 if (exportIndex == pageIds.length)
                   zipWriter.close(function() {
@@ -205,13 +217,16 @@ var storage = {};
                   exportContent(pageIds);
                 onprogress(exportIndex * 100, pageIds.length * 100);
               }, function(current, total) {
+                console.log('}, function(current, total) {');
                 onprogress((exportIndex * 100) + Math.floor((current / total) * 100), pageIds.length * 100);
               });
             }, function() {
-              // TODO
+              console.log('}, function() {');
+            // TODO
             });
           }, function() {
-            // TODO
+            console.log('}, function() {');
+          // TODO
           });
         });
       }, false, true);
@@ -220,13 +235,16 @@ var storage = {};
       tmpfs.root.getFile(getValidFileName(filename), {
         create: true
       }, function(zipfile) {
+        console.log('}, function(zipfile) {');
         file = zipfile;
         zip.createWriter(new zip.FileWriter(file), function(writer) {
+          console.log('zip.createWriter(new zip.FileWriter(file), function(writer) {');
           zipWriter = writer;
           exportContent(pageIds, 0);
           onprogress(exportIndex, pageIds.length);
         }, function(error) {
-          // TODO
+          console.log('}, function(error) {');
+        // TODO
         }, !compress);
       });
     });
@@ -237,6 +255,7 @@ var storage = {};
     var importIndex = 0,
       zipReader;
     zip.createReader(new zip.BlobReader(file), function(reader) {
+      console.log('zip.createReader(new zip.BlobReader(file), function(reader) {');
       var zipReader = reader;
       zipReader.getEntries(function(entries) {
         function nextFile() {
@@ -247,6 +266,7 @@ var storage = {};
             if (/\.html$|\.htm$/i.test(entry.filename)) {
               var blobWriter = new zip.BlobWriter();
               entry.getData(blobWriter, function(data) {
+                console.log('entry.getData(blobWriter, function(data) {');
                 var fileReader = new FileReader();
                 fileReader.onloadend = function(event) {
                   console.log("fileReader.onloadend = function(event)");
@@ -261,14 +281,17 @@ var storage = {};
                   archiveFilename = archiveFilename.replace(/ \(\d*\)$/, "");
                   archiveTitle = entry.filename.replace(/.html?$/, "").replace(/ \(\d*\)$/, "");
                   storage.addContent(event.target.result, archiveTitle, null, null, function() {
+                    console.log('storage.addContent(event.target.result, archiveTitle, null, null, function() {');
                     importIndex++;
                     nextFile();
                   }, function() {
-                    // TODO error handling...
+                    console.log('}, function() {');
+                  // TODO error handling...
                   });
                 };
                 fileReader.readAsText(data, "UTF-8");
               }, function(current, total) {
+                console.log('}, function(current, total) {');
                 onprogress((importIndex * 100) + Math.floor((current / total) * 100), entries.length * 100);
               });
             } else {
@@ -307,10 +330,12 @@ var storage = {};
         id = rows.item(index).id;
         db.transaction(function(tx) {
           tx.executeSql("select content from pages_contents where id = ?", [id], function(cbTx, result) {
+            console.log('tx.executeSql("select content from pages_contents where id = ?", [id], function(cbTx, result) {');
             content = result.rows.item(0).content;
             fs.root.getFile(id + ".html", {
               create: true
             }, function(fileEntry) {
+              console.log('}, function(fileEntry) {');
               fileEntry.createWriter(function(fileWriter) {
                 fileWriter.onwrite = function(e) {
                   console.log("fileWriter.onwrite = function(e)");
@@ -330,8 +355,10 @@ var storage = {};
 
     db.transaction(function(tx) {
       tx.executeSql("select id from pages_contents", [], function(cbTx, result) {
+        console.log('tx.executeSql("select id from pages_contents", [], function(cbTx, result) {');
         exportContent(result.rows, 0);
       }, function() {
+        console.log('}, function() {');
         onfinish();
       });
     });
@@ -349,11 +376,13 @@ var storage = {};
         console.log("getContent()");
         if (fs && !forceUseDatabase)
           fs.root.getFile(id + ".html", null, function(fileEntry) {
+            console.log('fs.root.getFile(id + ".html", null, function(fileEntry) {');
             var fileReader = new FileReader();
             fileReader.onload = function(evt) {
               console.log("fileReader.onload = function(evt)");
               db.transaction(function(tx) {
                 tx.executeSql("select title from pages where pages.id = ?", [id], function(cbTx, result) {
+                  console.log('tx.executeSql("select title from pages where pages.id = ?", [id], function(cbTx, result) {');
                   if (callback)
                     callback(evt.target.result, result.rows.item(0).title);
                 });
@@ -368,11 +397,13 @@ var storage = {};
               fileReader.readAsText(file, "UTF-8");
             });
           }, function() {
+            console.log('}, function() {');
             storage.getContent(id, callback, true, dontSetReadDate);
           });
         else
           tx.executeSql("select pages_contents.content, title from pages, pages_contents where pages_contents.id = pages.id and pages.id = ?",
             [id], function(cbTx, result) {
+              console.log('[id], function(cbTx, result) {');
               if (callback)
                 callback(result.rows.item(0).content, result.rows.item(0).title);
             });
@@ -389,6 +420,7 @@ var storage = {};
     console.log("storage.getPage = function(url, callback)");
     db.transaction(function(tx) {
       tx.executeSql("select id from pages where url = ? or url = ? order by id desc", [url, url + '/'], function(cbTx, result) {
+        console.log('tx.executeSql("select id from pages where url = ? or url = ? order by id desc", [url, url + ' / '], function(cbTx, result) {');
         var search,
           searchFilters = [],
           urls = [],
@@ -420,6 +452,7 @@ var storage = {};
             }
             query += " order by id desc";
             tx.executeSql(query, params, function(cbTx, result) {
+              console.log('tx.executeSql(query, params, function(cbTx, result) {');
               if (callback)
                 callback(result.rows.length ? result.rows.item(0).id : null);
             });
@@ -453,6 +486,7 @@ var storage = {};
     console.log("storage.updatePage = function(id, content, forceUseDatabase)");
     if (fs && !forceUseDatabase) {
       fs.root.getFile(id + ".html", null, function(fileEntry) {
+        console.log('fs.root.getFile(id + ".html", null, function(fileEntry) {');
         fileEntry.createWriter(function(fileWriter) {
           fileWriter.onerror = function(e) {
             console.log("fileWriter.onerror = function(e)");
@@ -463,6 +497,7 @@ var storage = {};
           }));
         });
       }, function() {
+        console.log('}, function() {');
         storage.updatePage(id, content, true);
       });
     } else {
@@ -477,8 +512,10 @@ var storage = {};
     var tagId;
     db.transaction(function(tx) {
       tx.executeSql("select id from tags where tag = ?", [tag], function(cbTx, result) {
+        console.log('tx.executeSql("select id from tags where tag = ?", [tag], function(cbTx, result) {');
         if (!result.rows.length) {
           tx.executeSql("insert into tags (tag) values (?)", [tag], function(cbTx, result) {
+            console.log('tx.executeSql("insert into tags (tag) values (?)", [tag], function(cbTx, result) {');
             tagId = result.insertId;
             tx.executeSql("insert into pages_tags (page_id, tag_id) values (?, ?)", [pageId, tagId]);
             if (callback)
@@ -487,8 +524,10 @@ var storage = {};
         } else {
           tagId = result.rows.item(0).id;
           tx.executeSql("select page_id from pages_tags where page_id = ? and tag_id = ? ", [pageId, tagId], function(cbTx, result) {
+            console.log('tx.executeSql("select page_id from pages_tags where page_id = ? and tag_id = ? ", [pageId, tagId], function(cbTx, result) {');
             if (!result.rows.length) {
               tx.executeSql("insert into pages_tags (page_id, tag_id) values (?, ?)", [pageId, tagId], function() {
+                console.log('tx.executeSql("insert into pages_tags (page_id, tag_id) values (?, ?)", [pageId, tagId], function() {');
                 if (callback)
                   callback();
               });
@@ -553,7 +592,9 @@ var storage = {};
     console.log("storage.removeTag = function(pageId, tagValue, callback)");
     db.transaction(function(tx) {
       tx.executeSql("select id from pages_tags, tags where tag_id = id and tag = ?", [tagValue], function(cbTx, result) {
+        console.log('tx.executeSql("select id from pages_tags, tags where tag_id = id and tag = ?", [tagValue], function(cbTx, result) {');
         tx.executeSql("delete from pages_tags where page_id = ? and tag_id = ?", [pageId, result.rows.item(0).id], function() {
+          console.log('tx.executeSql("delete from pages_tags where page_id = ? and tag_id = ?", [pageId, result.rows.item(0).id], function() {');
           if (callback)
             callback();
         });
@@ -565,6 +606,7 @@ var storage = {};
     console.log("storage.updateTagValue = function(oldValue, newValue, callback)");
     db.transaction(function(tx) {
       tx.executeSql("update tags set tag = ? where tag = ?", [newValue, oldValue], function() {
+        console.log('tx.executeSql("update tags set tag = ? where tag = ?", [newValue, oldValue], function() {');
         if (callback)
           callback();
       });
@@ -586,6 +628,7 @@ var storage = {};
             query += " or";
         }
         tx.executeSql(query, params, function(cbTx, result) {
+          console.log('tx.executeSql(query, params, function(cbTx, result) {');
           var i,
             query,
             params = [];
@@ -597,6 +640,7 @@ var storage = {};
               query += " or";
           }
           tx.executeSql(query, params, function(cbTx, result) {
+            console.log('tx.executeSql(query, params, function(cbTx, result) {');
             if (callback)
               callback();
           });
@@ -621,6 +665,7 @@ var storage = {};
     requestUnused += " except select tag, tags.id from tags, pages_tags, pages where tags.id = tag_id and pages.id = page_id order by tag";
     db.transaction(function(tx) {
       tx.executeSql(requestUsed, [], function(cbTx, result) {
+        console.log('tx.executeSql(requestUsed, [], function(cbTx, result) {');
         var i,
           used = {},
           row,
@@ -636,6 +681,7 @@ var storage = {};
           used[row.tag].id = row.id;
         }
         tx.executeSql(requestUnused, [], function(cbTx, result) {
+          console.log('tx.executeSql(requestUnused, [], function(cbTx, result) {');
           var i,
             unused = {},
             row;
@@ -686,6 +732,7 @@ var storage = {};
         query += ")";
       }
       tx.executeSql(query, params, function(cbTx, result) {
+        console.log('tx.executeSql(query, params, function(cbTx, result) {');
         var i,
           ret = [];
         for (i = 0; i < result.rows.length; i++)
@@ -714,6 +761,7 @@ var storage = {};
         }
         query += ") order by lower(tag)";
         tx.executeSql(query, params, function(cbTx, result) {
+          console.log('tx.executeSql(query, params, function(cbTx, result) {');
           var i,
             ret = [];
           for (i = 0; i < result.rows.length; i++)
@@ -738,6 +786,7 @@ var storage = {};
         params.push(filteredTags[i]);
       }
       tx.executeSql(query, params, function(cbTx, result) {
+        console.log('tx.executeSql(query, params, function(cbTx, result) {');
         var i,
           ret = [];
         for (i = 0; i < result.rows.length; i++)
@@ -757,6 +806,7 @@ var storage = {};
       query += " and tag not in (select tag from tags, pages_tags where tags.id = tag_id and page_id = ?)";
       params.push(pageId);
       tx.executeSql(query, params, function(cbTx, result) {
+        console.log('tx.executeSql(query, params, function(cbTx, result) {');
         var i,
           ret = [];
         for (i = 0; i < result.rows.length; i++)
@@ -981,6 +1031,7 @@ var storage = {};
       if (searchFilters.limit && searchFilters.limit != "all")
         query += " limit " + (searchFilters.limit * currentPage) + ", " + searchFilters.limit;
       tx.executeSql(query, params, function(cbTx, result) {
+        console.log('tx.executeSql(query, params, function(cbTx, result) {');
         var i,
           rows = [],
           item,
@@ -1000,8 +1051,10 @@ var storage = {};
         }
         params = [];
         tx.executeSql(buildFullSearchPagesQuery(searchFilters, searchInTitle, params, true), params, function(cbTx, result) {
+          console.log('tx.executeSql(buildFullSearchPagesQuery(searchFilters, searchInTitle, params, true), params, function(cbTx, result) {');
           count = result.rows.item(0).count;
           tx.executeSql("select page_id, tag from tags, pages_tags where id = tag_id order by lower(tag)", [], function(cbTx, result) {
+            console.log('tx.executeSql("select page_id, tag from tags, pages_tags where id = tag_id order by lower(tag)", [], function(cbTx, result) {');
             var i,
               item,
               ret = [],
@@ -1043,6 +1096,7 @@ var storage = {};
             query += " or";
         }
         tx.executeSql(query, params, function(cbTx, result) {
+          console.log('tx.executeSql(query, params, function(cbTx, result) {');
           var i,
             query,
             params = [];
@@ -1054,6 +1108,7 @@ var storage = {};
               query += " or";
           }
           tx.executeSql(query, params, function(cbTx, result) {
+            console.log('tx.executeSql(query, params, function(cbTx, result) {');
             var i,
               query,
               params = [];
@@ -1065,6 +1120,7 @@ var storage = {};
                 query += " or";
             }
             tx.executeSql(query, params, function(cbTx, result) {
+              console.log('tx.executeSql(query, params, function(cbTx, result) {');
               var i,
                 query,
                 params = [];
@@ -1076,11 +1132,13 @@ var storage = {};
                   query += " or";
               }
               tx.executeSql(query, params, function(cbTx, result) {
+                console.log('tx.executeSql(query, params, function(cbTx, result) {');
                 if (fs) {
                   var i,
                     rootReader;
                   for (i = 0; i < pageIds.length; i++) {
                     fs.root.getFile(pageIds[i] + ".html", null, function(fileEntry) {
+                      console.log('fs.root.getFile(pageIds[i] + ".html", null, function(fileEntry) {');
                       fileEntry.remove();
                     });
                   }
@@ -1109,6 +1167,7 @@ var storage = {};
       var today = new Date();
       tx.executeSql(query, [favicoData, url, title, timestamp || today.getTime(), content.length, readDateTs || null, idx || null], function(cbTx,
         result) {
+        console.log('tx.executeSql(query, [favicoData, url, title, timestamp || today.getTime(), content.length, readDateTs || null, idx || null], function(cbTx,');
         var id = result.insertId;
 
         function onFileError(e) {
@@ -1117,6 +1176,7 @@ var storage = {};
             onFileErrorCallback(id);
           db.transaction(function(tx) {
             tx.executeSql("delete from pages where id = ?", [id], function() {
+              console.log('tx.executeSql("delete from pages where id = ?", [id], function() {');
               addContent(favicoData, url, title, content, text, timestamp, readDateTs, idx, tags, callback, onFileErrorCallback, true);
             });
           });
@@ -1125,8 +1185,10 @@ var storage = {};
         function finishUpdate() {
           console.log("finishUpdate()");
           storage.addTags([], tags, [id], function() {
+            console.log('storage.addTags([], tags, [id], function() {');
             db.transaction(function(tx) {
               tx.executeSql("insert into pages_texts (id, text) values (?, ?)", [id, text], function() {
+                console.log('tx.executeSql("insert into pages_texts (id, text) values (?, ?)", [id, text], function() {');
                 if (callback)
                   callback(id);
               });
@@ -1138,6 +1200,7 @@ var storage = {};
           fs.root.getFile(id + ".html", {
             create: true
           }, function(fileEntry) {
+            console.log('}, function(fileEntry) {');
             fileEntry.createWriter(function(fileWriter) {
               fileWriter.onerror = onFileError;
               fileWriter.onwrite = finishUpdate;
