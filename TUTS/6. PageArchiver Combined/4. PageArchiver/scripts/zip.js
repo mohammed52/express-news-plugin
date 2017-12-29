@@ -301,6 +301,7 @@
     function readUint8Array(index, length, callback, onerror) {
       console.log("readUint8Array(index, length, callback, onerror)");
       readArrayBuffer(index, length, function(arraybuffer) {
+        console.log('readArrayBuffer(index, length, function(arraybuffer) {');
         callback(new Uint8Array(arraybuffer));
       }, onerror);
     }
@@ -511,6 +512,7 @@
       index = chunkIndex * CHUNK_SIZE;
       if (index < size)
         reader.readUint8Array(offset + index, Math.min(CHUNK_SIZE, size - index), function(array) {
+          console.log('reader.readUint8Array(offset + index, Math.min(CHUNK_SIZE, size - index), function(array) {');
           worker.postMessage({
             append: true,
             data: array
@@ -543,6 +545,7 @@
       index = chunkIndex * CHUNK_SIZE;
       if (index < size)
         reader.readUint8Array(offset + index, Math.min(CHUNK_SIZE, size - index), function(inputData) {
+          console.log('reader.readUint8Array(offset + index, Math.min(CHUNK_SIZE, size - index), function(inputData) {');
           var outputData = process.append(inputData, function() {
             console.log('var outputData = process.append(inputData, function() {');
             if (onprogress)
@@ -644,6 +647,7 @@
       var index = chunkIndex * CHUNK_SIZE;
       if (index < size)
         reader.readUint8Array(offset + index, Math.min(CHUNK_SIZE, size - index), function(array) {
+          console.log('reader.readUint8Array(offset + index, Math.min(CHUNK_SIZE, size - index), function(array) {');
           if (computeCrc32)
             crc32.append(array);
           if (onprogress)
@@ -809,6 +813,7 @@
       }
 
       reader.readUint8Array(that.offset, 30, function(bytes) {
+        console.log('reader.readUint8Array(that.offset, 30, function(bytes) {');
         var data = getDataHelper(bytes.length, bytes),
           dataOffset;
         if (data.view.getUint32(0) != 0x504b0304) {
@@ -816,6 +821,7 @@
           return;
         }
         readCommonHeader(that, data, 4, false, function(error) {
+          console.log('readCommonHeader(that, data, 4, false, function(error) {');
           onerror(error);
           return;
         });
@@ -832,6 +838,7 @@
     function seekEOCDR(offset, entriesCallback) {
       console.log("seekEOCDR(offset, entriesCallback)");
       reader.readUint8Array(reader.size - offset, offset, function(bytes) {
+        console.log('reader.readUint8Array(reader.size - offset, offset, function(bytes) {');
         var dataView = getDataHelper(bytes.length, bytes).view,
           datalength,
           fileslength;
@@ -855,9 +862,11 @@
         }
         // look for End of central directory record
         seekEOCDR(22, function(dataView) {
+          console.log('seekEOCDR(22, function(dataView) {');
           datalength = dataView.getUint32(16, true);
           fileslength = dataView.getUint16(8, true);
           reader.readUint8Array(datalength, reader.size - datalength, function(bytes) {
+            console.log('reader.readUint8Array(datalength, reader.size - datalength, function(bytes) {');
             var i,
               index = 0,
               entries = [],
@@ -872,6 +881,7 @@
                 return;
               }
               readCommonHeader(entry, data, index + 6, true, function(error) {
+                console.log('readCommonHeader(entry, data, index + 6, true, function(error) {');
                 onerror(error);
                 return;
               });

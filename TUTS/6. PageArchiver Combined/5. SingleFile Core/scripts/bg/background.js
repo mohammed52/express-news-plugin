@@ -92,6 +92,7 @@
     console.log("setContentResponse(tabId, pageId, docData, content)");
     var pageData = tabs[tabId][pageId];
     processingPagesCount--;
+    console.log('chrome.extension.sendMessage(pageData.senderId, {');
     chrome.extension.sendMessage(pageData.senderId, {
       processEnd: true,
       tabId: tabId,

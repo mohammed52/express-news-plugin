@@ -59,11 +59,13 @@
   function removeUnusedCSSRules() {
     console.log("removeUnusedCSSRules()");
     Array.prototype.forEach.call(document.querySelectorAll("style"), function(style) {
+      console.log('Array.prototype.forEach.call(document.querySelectorAll("style"), function(style) {');
       var cssRules = [];
 
       function process(rules) {
         console.log("process(rules)");
         Array.prototype.forEach.call(rules, function(rule) {
+          console.log('Array.prototype.forEach.call(rules, function(rule) {');
           var selector;
           if (rule.media) {
             cssRules.push("@media " + Array.prototype.join.call(rule.media, ",") + " {");
@@ -91,6 +93,7 @@
   function removeHiddenElements() {
     console.log("removeHiddenElements()");
     Array.prototype.forEach.call(doc.querySelectorAll("html > body *:not(style):not(script):not(link):not(area)"), function(element) {
+      console.log('Array.prototype.forEach.call(doc.querySelectorAll("html > body *:not(style):not(script):not(link):not(area)"), function(element) {');
       var style = getComputedStyle(element),
         tagName = element.tagName.toLowerCase();
       if (tagName != "iframe" && !element.querySelector("iframe") && ((style.visibility == "hidden" || style.display == "none" || style.opacity == 0)))
@@ -129,6 +132,7 @@
       var rules,
         cssText;
       Array.prototype.forEach.call(node.children, function(child) {
+        console.log('Array.prototype.forEach.call(node.children, function(child) {');
         addStyle(child);
       });
       // window.getMatchedCSSRules - get all applied css rules of an element and its child elements
@@ -136,6 +140,7 @@
       if (rules) {
         cssText = "";
         Array.prototype.forEach.call(rules, function(rule) {
+          console.log('Array.prototype.forEach.call(rules, function(rule) {');
           // rule.style.cssText - returns the actual text of a CSSStyleSheet style-rule
           // converts css classes and all props into string
           cssText += rule.style.cssText;
@@ -172,6 +177,7 @@
     console.log("getCanvasData(doc)");
     var canvasData = [];
     Array.prototype.forEach.call(doc.querySelectorAll("canvas"), function(node) {
+      console.log('Array.prototype.forEach.call(doc.querySelectorAll("canvas"), function(node) {');
       var data = null;
       try {
         // HTMLCanvasElement.toDataURL() - returns a data uri , containing a representation of the image
@@ -194,6 +200,7 @@
       requestManager: requestManager,
       processDoc: singlefile.initProcess(doc, docElement, topWindow, doc.baseURI, doc.characterSet, config, canvasData, requestManager, function(
         maxIndex) {
+        console.log('processDoc: singlefile.initProcess(doc, docElement, topWindow, doc.baseURI, doc.characterSet, config, canvasData, requestManager, function(');
         console.log("bgPort.postMessage({");
         bgPort.postMessage({
           docInit: true,
@@ -202,6 +209,7 @@
           maxIndex: maxIndex
         });
       }, function(index) {
+        console.log('}, function(index) {');
         console.log("bgPort.postMessage({");
         bgPort.postMessage({
           docProgress: true,
@@ -210,6 +218,7 @@
           index: index
         });
       }, function() {
+        console.log('}, function() {');
         console.log("bgPort.postMessage({");
         bgPort.postMessage({
           docEnd: true,
@@ -285,6 +294,7 @@
           wininfo.frames.forEach(function(frame) {
             if (frame.sameDomain)
               wininfo.getContent(frame, function(message) {
+                console.log('wininfo.getContent(frame, function(message) {');
                 var frameDoc = document.implementation.createHTMLDocument();
                 frameDoc.open();
                 frameDoc.write(message.content);
@@ -323,6 +333,7 @@
             wininfo.frames.forEach(function(frame) {
               if (frame.sameDomain)
                 wininfo.getContent(frame, function(message) {
+                  console.log('wininfo.getContent(frame, function(message) {');
                   sendBgProcessInit(message.content, message.title, message.url, message.baseURI, message.characterSet, frame.winId,
                     frame.index);
                 });
@@ -364,6 +375,7 @@
 
     if (!selectedContent) {
       Array.prototype.forEach.call(doc.querySelectorAll("noscript"), function(node) {
+        console.log('Array.prototype.forEach.call(doc.querySelectorAll("noscript"), function(node) {');
         node.textContent = "";
       });
       // getCanvasData - array of all canvas nodes converted into data uris
@@ -435,6 +447,7 @@
           mutationEventId++;
         } else
           processDocFn = singlefile.initProcess(doc, element, false, doc.baseURI, doc.characterSet, config, canvasData, docs[winId].requestManager, function(maxIndex) {
+            console.log('processDocFn = singlefile.initProcess(doc, element, false, doc.baseURI, doc.characterSet, config, canvasData, docs[winId].requestManager, function(maxIndex) {');
             doc.removeEventListener("DOMSubtreeModified", onDOMSubtreeModified, true);
             processDocFn();
             doc.addEventListener("DOMSubtreeModified", onDOMSubtreeModified, true);
