@@ -113,7 +113,7 @@
       wrapper,
       clonedNode,
 
-      // Returns a Selection object representing the range of 
+      // MDN API method, Returns a Selection object representing the range of 
       // text selected by the user or the current position of the caret
       selection = getSelection(),
 
@@ -247,7 +247,14 @@
       index: winIndex || wininfo.index
     });
   }
+  /**
+   * content object contains the full page as an object as a string, sends a message to door-quote via bgPort
+   * @param  {string} content       full page in string format
+   
+   rest all params are undefined at the first run
 
+   * @return {[type]}              [description]
+   */
   function sendBgProcessInit(content, title, url, baseURI, characterSet, winId, winIndex) {
     console.log("sendBgProcessInit(content, title, url, baseURI, characterSet, winId, winIndex)");
     var contextmenuTime = window.contextmenuTime;
@@ -306,9 +313,15 @@
       }
     }
 
+    /**
+     * starts a bgProcess ??? calls sendBgProcessInit() in the first run
+     * @return {[type]} [description]
+     */
     function bgProcessInit() {
       console.log("bgProcessInit()");
       debugger;
+      // what is xhr request? xml request ?
+      // xhr = xhm
       var xhr;
       // singleFile initialised in SingleFile->scripts->bg->index.js
       // singleFile has util, initProcess, config, pageId objects and methods

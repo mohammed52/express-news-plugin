@@ -260,7 +260,7 @@
 
   /**
    * onConnect - adds onMessage and onDisconnect listeners
-   * @param  {object} port contains name(singleFile), onDisconnect, onMessage, sender(extension id ma, tab url etx)
+   * @param  {object} port contains name(singleFile), onDisconnect, onMessage, sender(extension id ma, tab url etc)
    */
   function onConnect(port) {
     console.log("onConnect(port)");
