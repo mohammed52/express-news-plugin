@@ -71,15 +71,20 @@
       callback();
   }
 
+  // the same message object received from the door-quote script is passed here
+  // 
   function processInit(tabId, port, message) {
     console.log("processInit(tabId, port, message)");
 
     // tabs = Singlefile.tabs, contains as many tabs as many times you execute the save tab process
+    // pageData - gets the pageData object from the tabs array->tabId->message.pageId
     var pageData = tabs[tabId][message.pageId];
     pageData.portsId.push(port.portId_);
-    // pageData.getDocData is a bgCore method, returns undefined
+    // pageData.getDocData is a bgCore method, returns undefined in the first run
     if (!pageData.getDocData(message.winId))
       // pageData.processDoc is a bgCore method
+      // processDoc called with various message object params
+      // 
       pageData.processDoc(port, message.topWindow, message.winId, message.index, message.content, message.title, message.url, message.baseURI,
         message.characterSet, message.canvasData, message.contextmenuTime, {
           init: docInit,
@@ -283,6 +288,8 @@
     }
 
     // called when message received from door-quote page script, onMessage calls process Init
+    // calls processInit in the first run
+    // message contains - processInit: true, pageId: 0, topWindow: true, url: door-quote-url, title: ...
     function onMessage(message) {
       console.log("onMessage(message)");
       var pageData,
@@ -294,6 +301,10 @@
           processInit(tabId, port, message);
         else {
           pageData = tabs[tabId][message.pageId];
+
+          // getDocData is a bgCore method
+          // pageData is defined in bgCore
+          // 
           docData = pageData.getDocData(message.winId);
           if (message.processDocFragment)
             pageData.processDocFragment(docData, message.mutationEventId, message.content);

@@ -96,24 +96,37 @@
     },
     processDoc: function(port, topWindow, winId, index, content, title, url, baseURI, characterSet, canvasData, contextmenuTime, callbacks) {
       console.log("processDoc: function(port, topWindow, winId, index, content, title, url, baseURI, characterSet, canvasData, contextmenuTime, callbacks)");
+      // because this frequently changes when you change the scope by calling a new function, 
+      // you can't access the original value by using it, alisasing it to that allows you to still access
+      // the original value of this
       var that = this,
         docData;
-      // returns a set of DocData properties, bgCore method
+      // sets all the properties in bgCore DocData properties, again a bgCore method
+      // port, content, baseUri, characterSet, canvasData, winId, index ...
+      // most were received from message from the door-quote script message
       docData = new DocData(port, winId, index, content, baseURI, characterSet, canvasData);
+
+      // sets more props
       if (topWindow) {
         this.top = docData;
         this.title = title || "";
         this.url = url;
       }
 
-      // docData is pushed onto docs
+      // docData is pushed onto this.docs array ??
       this.docs.push(docData);
+
+
       if (this.processFrame && contextmenuTime && (!this.contextmenuTime || contextmenuTime > this.contextmenuTime)) {
         this.contextmenuTime = contextmenuTime;
         this.frameDocData = docData;
       }
+
+      // both true
       if (this.config.processInBackground && docData.content) {
+        // again a bgCore method writes the conent html string into an html document, this.doc
         docData.parseContent();
+
         docData.processDocCallback = singlefile.initProcess(docData.doc, docData.doc.documentElement, topWindow, baseURI, characterSet, this.config,
           canvasData, this.requestManager, function(maxIndex) {
             console.log('canvasData, this.requestManager, function(maxIndex) {');
@@ -256,7 +269,7 @@
       }, characterSet, mediaTypeParam);
     },
 
-    //  returns undefined
+    //  returns undefined in the first run
     getDocData: function(winId) {
       console.log("getDocData: function(winId)");
       var found;
@@ -273,7 +286,7 @@
   function DocData(port, winId, index, content, baseURI, characterSet, canvasData) {
     console.log("DocData(port, winId, index, content, baseURI, characterSet, canvasData)");
     this.port = port;
-    this.content = content;
+    this.content = content; // has the <!DOCTYPE html ... in the start of the html content in string
     this.baseURI = baseURI;
     this.characterSet = characterSet;
     this.canvasData = canvasData;
@@ -292,12 +305,22 @@
   DocData.prototype = {
     parseContent: function() {
       console.log("parseContent");
+
+      // mdn document.implementation returns a dom implementation object associated with the current document 
+      // you can insert a new html document in an iframe
       var doc = document.implementation.createHTMLDocument();
+
+      // open() opens a html document for writing, if a document exists in the target, this method clears it
       doc.open();
+      // writes the content object(html string) to the document, write html elements with text directly to the HTML document
       doc.write(this.content);
+      // finishes writing to a socument
       doc.close();
       this.doc = doc;
+      // returns a list of the elements within the document (using depth first pre-order traversal of the document's nodes)
+      // docFrames is empty
       this.docFrames = doc.querySelectorAll("iframe, frame");
+      // delete operator removes a property from an object
       delete this.content;
     },
     setChild: function(childDoc) {

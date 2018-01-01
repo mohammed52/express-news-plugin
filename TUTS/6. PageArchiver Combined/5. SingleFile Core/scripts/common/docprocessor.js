@@ -452,12 +452,13 @@
   }
 
   // ----------------------------------------------------------------------------------------------
-
+  // has the new html document that was created by copying the string content of the door-quote page
+  // 
   singlefile.initProcess = function(doc, docElement, addDefaultFavico, baseURI, characterSet, config, canvasData, requestManager, onInit, onProgress, onEnd) {
     console.log("singlefile.initProcess = function(doc, docElement, addDefaultFavico, baseURI, characterSet, config, canvasData, requestManager, onInit, onProgress, onEnd)");
     var initManager = new RequestManager(),
       manager = new RequestManager(onProgress);
-
+    // has a this.send and this.doSend methods, declares a few correntCount and requests array
     function RequestManager(onProgress) {
       console.log("RequestManager(onProgress)");
       var that = this,
