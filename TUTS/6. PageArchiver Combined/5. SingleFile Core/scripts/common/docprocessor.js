@@ -43,7 +43,8 @@
 
     return data;
   }
-
+  // link: link of the href / resource
+  // host: door-quote-url
   function formatURL(link, host) {
     console.log("formatURL(link, host)");
     var i,
@@ -168,12 +169,18 @@
   }
 
   // ----------------------------------------------------------------------------------------------
-
+  // doc: document, docElement: html, baseURI: door-quote-uri, reqeuestManager contains send, doSend and requestCount
+  // 
   function processStylesheets(doc, docElement, baseURI, requestManager) {
     console.log("processStylesheets(doc, docElement, baseURI, requestManager)");
+    // document.querySelectorAll returns a list of the elements within the document that matches the specified 
+    // group of selectors
+    // basically get all the links in the doc
     Array.prototype.forEach.call(docElement.querySelectorAll('link[href][rel*="stylesheet"]'), function(node) {
       console.log(', function(node) {');
+      // get a href attribute/ link address of the node
       var href = node.getAttribute("href"),
+        // format the url
         url = formatURL(href, baseURI);
 
       function createStyleNode(content) {
@@ -456,9 +463,11 @@
   // 
   singlefile.initProcess = function(doc, docElement, addDefaultFavico, baseURI, characterSet, config, canvasData, requestManager, onInit, onProgress, onEnd) {
     console.log("singlefile.initProcess = function(doc, docElement, addDefaultFavico, baseURI, characterSet, config, canvasData, requestManager, onInit, onProgress, onEnd)");
+    // calls RequestManager() twice, once on initManager and next on manager and passes onProgress
     var initManager = new RequestManager(),
       manager = new RequestManager(onProgress);
     // has a this.send and this.doSend methods, declares a few correntCount and requests array
+    // onProgress callback is called in this.doSend method below
     function RequestManager(onProgress) {
       console.log("RequestManager(onProgress)");
       var that = this,
@@ -538,7 +547,10 @@
         cbImports();
     }
 
+    // manager is the RequestManager() initialised above with the this.send and this.doSend methods
     manager.onEnd = onEnd;
+    // doc is the html document, docElement is also an html document ? , 
+    // requestManager object has send, doSend and requestCount
     processStylesheets(doc, docElement, baseURI, initManager);
     initManager.onEnd = cbStylesheets;
     initManager.doSend();
