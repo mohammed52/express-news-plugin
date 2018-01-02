@@ -70,9 +70,7 @@
     else if (callback)
       callback();
   }
-
   // the same message object received from the door-quote script is passed here
-  // 
   function processInit(tabId, port, message) {
     console.log("processInit(tabId, port, message)");
 
@@ -289,7 +287,13 @@
 
     // called when message received from door-quote page script, onMessage calls process Init
     // calls processInit in the first run
-    // message contains - processInit: true, pageId: 0, topWindow: true, url: door-quote-url, title: ...
+    // message contains - processInit: true, pageId: 0, topWindow: true, url: door-quote-url, title: ... many undefined
+    // processInit=true
+    // pageId: 0
+    // topWindow: true
+    // url: door-quote-url
+    // title: reactGo title
+    // ...
     function onMessage(message) {
       console.log("onMessage(message)");
       var pageData,

@@ -108,9 +108,9 @@
 
       // sets more props
       if (topWindow) {
-        this.top = docData;
-        this.title = title || "";
-        this.url = url;
+        this.top = docData; // contains port and content string and other objects
+        this.title = title || ""; // reactGo - just Ship it
+        this.url = url; // door-quote url
       }
 
       // docData is pushed onto this.docs array ??
@@ -285,14 +285,15 @@
 
   function DocData(port, winId, index, content, baseURI, characterSet, canvasData) {
     console.log("DocData(port, winId, index, content, baseURI, characterSet, canvasData)");
-    this.port = port;
-    this.content = content; // has the <!DOCTYPE html ... in the start of the html content in string
-    this.baseURI = baseURI;
-    this.characterSet = characterSet;
-    this.canvasData = canvasData;
-    this.winId = winId;
-    this.index = index;
-    this.children = [];
+
+    this.port = port; // connection port to the door-quote script for messaging
+    this.content = content; // html document in string format, has the <!DOCTYPE html ... at start
+    this.baseURI = baseURI; // door-quote-uri
+    this.characterSet = characterSet; // UTF-8
+    this.canvasData = canvasData; // empty array
+    this.winId = winId; // 0
+    this.index = index; // 0
+    this.children = []; // 
     this.doc = null;
     this.docFrames = null;
     this.processDocCallback = null;

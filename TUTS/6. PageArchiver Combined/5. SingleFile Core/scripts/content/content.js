@@ -257,6 +257,8 @@
    */
   function sendBgProcessInit(content, title, url, baseURI, characterSet, winId, winIndex) {
     console.log("sendBgProcessInit(content, title, url, baseURI, characterSet, winId, winIndex)");
+
+    // contextMenuTime undefined
     var contextmenuTime = window.contextmenuTime;
     if (!this.wininfo)
       return;
@@ -264,17 +266,17 @@
     console.log("bgPort.postMessage({");
     bgPort.postMessage({
       processInit: true,
-      pageId: pageId,
-      topWindow: winId ? false : window == top,
-      url: url || location.href,
-      title: title || doc.title,
-      content: content,
-      baseURI: baseURI || doc.baseURI,
-      characterSet: characterSet || doc.characterSet,
-      canvasData: canvasData,
-      winId: winId || wininfo.winId,
-      contextmenuTime: contextmenuTime,
-      index: winIndex || wininfo.index
+      pageId: pageId, // integer 20
+      topWindow: winId ? false : window == top, // some string message and string stack combined in an object
+      url: url || location.href, // undefined
+      title: title || doc.title, // undefined
+      content: content, // html page in string
+      baseURI: baseURI || doc.baseURI, // undefined
+      characterSet: characterSet || doc.characterSet, // undefined
+      canvasData: canvasData, // empty array
+      winId: winId || wininfo.winId, // undefined
+      contextmenuTime: contextmenuTime, // undefined
+      index: winIndex || wininfo.index // string message and string stack in one object
     });
   }
 
@@ -326,10 +328,12 @@
       // singleFile initialised in SingleFile->scripts->bg->index.js
       // singleFile has util, initProcess, config, pageId objects and methods
       if (singlefile.processSelection) {
+        // top window = true, selectedContent = undefined
         if (selectedContent || !topWindow)
           sendBgProcessInit(topWindow ? singlefile.util.getDocContent(doc, selectedContent) : null);
       } else {
         // config vars, loaded from DEFAULT_CONFIG in background.js
+        // top window = true, config.getRawDoc = false
         if (config.getRawDoc && topWindow) {
           xhr = new XMLHttpRequest();
           xhr.onreadystatechange = function() {
@@ -341,6 +345,7 @@
           xhr.overrideMimeType('text/plain; charset=' + doc.characterSet);
           xhr.send(null);
         } else {
+          // singlefile.util.getDocContent(doc) - adds a html doc comment to the outerHTML node and calls sendBgProcessInit
           sendBgProcessInit(singlefile.util.getDocContent(doc));
           if (topWindow && !config.removeFrames)
             wininfo.frames.forEach(function(frame) {
