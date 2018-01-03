@@ -43,21 +43,26 @@
 
     return data;
   }
-  // link: link of the href / resource
+  // link: link of the href / resource / font link on the googleapis server
   // host: door-quote-url
   function formatURL(link, host) {
     console.log("formatURL(link, host)");
     var i,
       newlinkparts,
-      hparts,
-      lparts;
+      hparts, // host parts
+      lparts; //link parts
     if (!link)
       return "";
 
     lparts = link.split('/');
     host = host.split("#")[0].split("?")[0];
+    //is the link name hosted on a different url, return link.trim() e.g. google hosted font
     if (/http:|https:|ftp:|data:|javascript:/i.test(lparts[0]))
       return link.trim();
+
+    // if the resource if on the same server e.g. css file, the code reaches here
+    // the relative of the resource(css file) is converted into a global 
+    // address together with with door-quote-url 
     hparts = host.split('/');
     newlinkparts = [];
     if (hparts.length > 3)
@@ -180,7 +185,7 @@
       console.log(', function(node) {');
       // get a href attribute/ link address of the node
       var href = node.getAttribute("href"),
-        // format the url
+        // format the url, url can be a google font link or a css file for the website
         url = formatURL(href, baseURI);
 
       function createStyleNode(content) {
@@ -202,8 +207,10 @@
         } else
           node.parentElement.replaceChild(newNode, node);
       }
-
+      // when you reach here, the url of the resource has been cleaned, 
+      // style sheets are being processed
       if (href.indexOf("data:") != 0)
+        // use the requestManager to fetch the resource
         requestManager.send(url, function(data) {
           console.log('requestManager.send(url, function(data) {');
           if (data.status >= 400)
@@ -474,19 +481,22 @@
         currentCount = 0,
         requests = [];
       this.requestCount = 0;
+      // this.send pushes all the urls in the requests array and increments the requestsCount
       this.send = function(url, responseHandler, characterSet, mediaTypeParam) {
         console.log("this.send = function(url, responseHandler, characterSet, mediaTypeParam)");
         this.requestCount++;
         requests.push({
           url: url,
           responseHandler: responseHandler,
-          characterSet: characterSet,
-          mediaTypeParam: mediaTypeParam
+          characterSet: characterSet, // undefined
+          mediaTypeParam: mediaTypeParam // undefined
         });
       };
       this.doSend = function() {
         console.log("this.doSend = function()");
+        // requests is an array
         requests.forEach(function(request) {
+          // send is in nio.js, creates and AJAX request for the resources in the requests array
           requestManager.send(request.url, function(response) {
             console.log('requestManager.send(request.url, function(response) {');
             request.responseHandler(response);
@@ -553,6 +563,8 @@
     // requestManager object has send, doSend and requestCount
     processStylesheets(doc, docElement, baseURI, initManager);
     initManager.onEnd = cbStylesheets;
+    // once all the urls of all the resources (fonts and css files) are formatted and loaded into the request array
+    // doSend() is called
     initManager.doSend();
     if (initManager.requestCount == 0)
       initManager.onEnd();
