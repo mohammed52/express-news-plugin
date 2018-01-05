@@ -552,6 +552,7 @@
 
     function cbStylesheets() {
       console.log("cbStylesheets()");
+      // initManager is a RequestManager
       initManager.onEnd = function(noRequests) {
         console.log("initManager.onEnd = function(noRequests)");
         if (noRequests)
@@ -560,6 +561,7 @@
           cbStylesheets();
       };
       processImports(docElement, baseURI, characterSet, initManager);
+      // initManager is a RequestManager
       initManager.doSend();
       if (initManager.requestCount == 0)
         cbImports();
@@ -570,6 +572,7 @@
     // doc is the html document, docElement is also an html document ? , 
     // requestManager object has send, doSend and requestCount
     processStylesheets(doc, docElement, baseURI, initManager);
+    // initManager is a RequestManager
     initManager.onEnd = cbStylesheets;
     // once all the urls of all the resources (fonts and css files) are formatted and loaded into the request array
     // doSend() is called

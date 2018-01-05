@@ -86,7 +86,7 @@
         xhr = new XMLHttpRequest();
 
         // onLoad : callback executed when the request executes successfully
-        // 
+        // onLoad: called when an xhr request transaction completes successfully
         xhr.onload = function() {
           console.log("xhr.onload = function()");
           clearTimeout(timeout);
