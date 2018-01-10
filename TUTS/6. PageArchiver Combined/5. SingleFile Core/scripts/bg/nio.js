@@ -84,6 +84,9 @@
       else {
         pendingResponseHandlers[key] = [responseHandler];
         xhr = new XMLHttpRequest();
+
+        // onLoad : callback executed when the request executes successfully
+        // 
         xhr.onload = function() {
           console.log("xhr.onload = function()");
           clearTimeout(timeout);
@@ -103,6 +106,7 @@
           keys.push(key);
           sendResponses(key);
         };
+        // initialiazes the request, params: method, url, async
         xhr.open("GET", url, true);
         if (mediaTypeParam == "base64") {
           xhr.responseType = "arraybuffer";
@@ -112,6 +116,7 @@
           sendResponses(key);
         }, XHR_TIMEOUT);
         try {
+          // send the request, parameter is the request body
           xhr.send(null);
         } catch ( e ) {
           sendResponses(key);

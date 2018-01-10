@@ -95,7 +95,7 @@
         newlinkparts[newlinkparts.length] = lparts[i];
     return (hparts.join('/') + '/' + newlinkparts.join('/')).trim();
   }
-
+  // called from createStyleNode
   function resolveURLs(content, host) {
     console.log("resolveURLs(content, host)");
     var ret = content.replace(URL_EXP, function(value) {
@@ -175,7 +175,8 @@
 
   // ----------------------------------------------------------------------------------------------
   // doc: document, docElement: html, baseURI: door-quote-uri, reqeuestManager contains send, doSend and requestCount
-  // 
+  // calls formatsUrl and sends the resouces in the requests array to be downloaded in requestManager.doSend
+  //  
   function processStylesheets(doc, docElement, baseURI, requestManager) {
     console.log("processStylesheets(doc, docElement, baseURI, requestManager)");
     // document.querySelectorAll returns a list of the elements within the document that matches the specified 
@@ -188,6 +189,8 @@
         // format the url, url can be a google font link or a css file for the website
         url = formatURL(href, baseURI);
 
+      // when the xhr onLoad call back is called, createStyleNode may be executed
+      // create a new styleNode, with the style tag in the html document being saved
       function createStyleNode(content) {
         console.log("createStyleNode(content)");
         var i,
@@ -199,6 +202,7 @@
             newNode.setAttribute(node.attributes[i].name, node.attributes[i].value);
         newNode.dataset.href = url;
         newNode.removeAttribute("href");
+        // resolveURLs ???
         newNode.textContent = resolveURLs(content, url);
         if (node.disabled) {
           commentNode = doc.createComment();
@@ -211,11 +215,14 @@
       // style sheets are being processed
       if (href.indexOf("data:") != 0)
         // use the requestManager to fetch the resource
+        // call back is called on the data responce
         requestManager.send(url, function(data) {
           console.log('requestManager.send(url, function(data) {');
           if (data.status >= 400)
             node.parentElement.removeChild(node);
           else
+            // if request responce is valid, createStyleNode from the text received as responce
+            // called when the css file is downloaded from the responcee
             createStyleNode(data.content || "");
         });
       else
@@ -467,7 +474,7 @@
 
   // ----------------------------------------------------------------------------------------------
   // has the new html document that was created by copying the string content of the door-quote page
-  // 
+  // calls processStyleSheets and push all css/font resource requests in the requests array, call requestManager.doSend
   singlefile.initProcess = function(doc, docElement, addDefaultFavico, baseURI, characterSet, config, canvasData, requestManager, onInit, onProgress, onEnd) {
     console.log("singlefile.initProcess = function(doc, docElement, addDefaultFavico, baseURI, characterSet, config, canvasData, requestManager, onInit, onProgress, onEnd)");
     // calls RequestManager() twice, once on initManager and next on manager and passes onProgress
@@ -495,6 +502,7 @@
       this.doSend = function() {
         console.log("this.doSend = function()");
         // requests is an array
+        // requests array has 02 objects
         requests.forEach(function(request) {
           // send is in nio.js, creates and AJAX request for the resources in the requests array
           requestManager.send(request.url, function(response) {
@@ -565,6 +573,7 @@
     initManager.onEnd = cbStylesheets;
     // once all the urls of all the resources (fonts and css files) are formatted and loaded into the request array
     // doSend() is called
+
     initManager.doSend();
     if (initManager.requestCount == 0)
       initManager.onEnd();
