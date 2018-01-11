@@ -6,6 +6,12 @@ import MainSection from '../components/MainSection';
 import * as TodoActions from '../actions/todos';
 import style from './App.css';
 
+var scrape = require('website-scraper');
+var options = {
+  urls: ['http://nodejs.org/'],
+  directory: '/path/to/save/',
+};
+
 @connect(
   state => ({
     todos: state.todos
@@ -21,6 +27,10 @@ export default class App extends Component {
     actions: PropTypes.object.isRequired
   };
 
+  componentWillMount() {
+    console.log("componentWillMount");
+  }
+
   render() {
     const {todos, actions} = this.props;
 
@@ -33,7 +43,7 @@ export default class App extends Component {
         <br/>
         <br/>
         <div>
-          Hello World
+          Hello World REALLY COOL DOES THIS
         </div>
         <iframe src={"http://www.bbc.com/news"}
                 frameBorder="0" />
