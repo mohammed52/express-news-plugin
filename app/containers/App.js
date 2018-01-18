@@ -6,11 +6,11 @@ import MainSection from '../components/MainSection';
 import * as TodoActions from '../actions/todos';
 import style from './App.css';
 
-var scrape = require('website-scraper');
-var options = {
-  urls: ['http://nodejs.org/'],
-  directory: '/path/to/save/',
-};
+// var scrape = require('website-scraper');
+// var options = {
+//   urls: ['http://nodejs.org/'],
+//   directory: '/path/to/save/',
+// };
 
 @connect(
   state => ({
@@ -42,11 +42,16 @@ export default class App extends Component {
         <br/>
         <br/>
         <br/>
+        <iframe src="http://www.aijaz.biz/"
+                width="540"
+                height="450"></iframe>
+        <iframe src="http://www.bbc.com/news"
+                width="540"
+                height="1250"
+                scrolling="no"></iframe>
         <div>
           Hello World REALLY COOL DOES THIS
         </div>
-        <iframe src={"http://www.bbc.com/news"}
-                frameBorder="0" />
       </div>
     );
   }
