@@ -19,5 +19,5 @@
     "page": "background.html"
   },
   "permissions": [ "contextMenus", "management", "tabs", "storage", "https://github.com/*","webRequest", "webRequestBlocking", "\u003Call_urls>" ],
-  "content_security_policy": "frame-src 'self' http://www.bbc.com/news; default-src 'self' http://www.bbc.com/news; script-src 'self' http://localhost:3000 https://localhost:3000 'unsafe-eval'; connect-src http://localhost:3000 https://localhost:3000; style-src * 'unsafe-inline' 'self' blob:; img-src 'self' data:;"
+  "content_security_policy": "frame-src 'self' https://timesofindia.indiatimes.com/ http://www.bbc.com/news http://edition.cnn.com/ https://tribune.com.pk/ http://www.dawn.com/; default-src 'self' http://www.bbc.com/news; script-src 'self' http://localhost:3000 https://localhost:3000 'unsafe-eval'; connect-src http://localhost:3000 https://localhost:3000; style-src * 'unsafe-inline' 'self' blob:; img-src 'self' data:;"
 }

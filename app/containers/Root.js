@@ -9,15 +9,28 @@ export default class Root extends Component {
   };
 
   render() {
+    const height = "5000";
     return (
       <div>
         <iframe src="http://www.bbc.com/news"
-                width="800"
-                height="1250"
+                width="780"
+                height={height}
                 scrolling="no"></iframe>
-        <iframe src="http://www.bbc.com/news"
-                width="800"
-                height="1250"
+        <iframe src="http://edition.cnn.com/"
+                width="780"
+                height={height}
+                scrolling="no"></iframe>
+        <iframe src="https://tribune.com.pk/"
+                width="780"
+                height={height}
+                scrolling="no"></iframe>
+        <iframe src="http://www.dawn.com/"
+                width="780"
+                height={height}
+                scrolling="no"></iframe>
+        <iframe src="https://timesofindia.indiatimes.com/"
+                width="780"
+                height={height}
                 scrolling="no"></iframe>
       </div>
 
