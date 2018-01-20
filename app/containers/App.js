@@ -36,23 +36,20 @@ export default class App extends Component {
 
     return (
       <div className={style.normal}>
-        <Header addTodo={actions.addTodo} />
-        <MainSection todos={todos}
-                     actions={actions} />
-        <br/>
-        <br/>
-        <br/>
-        <iframe src="http://www.aijaz.biz/"
-                width="540"
-                height="450"></iframe>
         <iframe src="http://www.bbc.com/news"
                 width="540"
                 height="1250"
                 scrolling="no"></iframe>
+        <Header addTodo={actions.addTodo} />
+        <MainSection todos={todos} actions={actions} />
+        <br/>
+        <br/>
+        <br/>
+        <iframe src="http://www.aijaz.biz/" width="540" height="450"></iframe>
         <div>
           Hello World REALLY COOL DOES THIS
         </div>
       </div>
-    );
+      );
   }
 }

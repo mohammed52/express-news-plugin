@@ -9,11 +9,27 @@ export default class Root extends Component {
   };
 
   render() {
-    const { store } = this.props;
     return (
-      <Provider store={store}>
-        <App />
-      </Provider>
-    );
+      <div>
+        <iframe src="http://www.bbc.com/news"
+                width="800"
+                height="1250"
+                scrolling="no"></iframe>
+        <iframe src="http://www.bbc.com/news"
+                width="800"
+                height="1250"
+                scrolling="no"></iframe>
+      </div>
+
+    )
   }
+
+//   render() {
+//     const { store } = this.props;
+//     return (
+//       <Provider store={store}>
+//         <App />
+//       </Provider>
+//     );
+//   }
 }
