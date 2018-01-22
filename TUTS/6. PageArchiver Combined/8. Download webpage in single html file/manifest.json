@@ -1,0 +1,38 @@
+{
+   "background": {
+      "scripts": [ "background.js" ]
+   },
+   "browser_action": {
+      "default_icon": {
+         "16": "icon16.png"
+      },
+      "default_title": "Save Page WE"
+   },
+   "commands": {
+      "_execute_browser_action": {
+         "description": "Save Page",
+         "suggested_key": {
+            "default": "Alt+A"
+         }
+      }
+   },
+   "description": "Save a complete web page (or just its current state) as a single HTML file.",
+   "icons": {
+      "128": "icon128-96.png",
+      "16": "icon16.png",
+      "32": "icon32.png",
+      "48": "icon48.png"
+   },
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7VdMK0Qmr+3e4NNykrlPbR268xdTcq0uzaO7HkMKtl1yzCVQieUdaoU2N8rwe7WQMz7Q19chjwp4+UBzwu3z2Is7qW4QD2wCXHfY+F22Ue1wmxZYd5t8w+BTr4JbPIsT9qhLEpYSRLJ/Doocm3Ekcy7Ttnax4XuS+09QnrudRFxikGmyUcwsuSGTiQf5oUZJQtk2zj51SSthV+nMBP4ZWkoNrf2tGibGgboz8Yn9WeoUEwgS3MOFCJgq0oN0LcWKDKHjOou7Xa0bEDq8LPjZOj0D7FshVBMJFgN3sNdAM68AxMf8eO+I1NBxlBuAlP+7Rm55fkgjBiLsx3z8A4DJQIDAQAB",
+   "manifest_version": 2,
+   "minimum_chrome_version": "35",
+   "name": "Save Page WE",
+   "options_ui": {
+      "open_in_tab": true,
+      "page": "options.html"
+   },
+   "permissions": [ "http://*/*", "https://*/*", "activeTab", "tabs", "webNavigation", "contextMenus", "notifications", "storage" ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "8.3",
+   "web_accessible_resources": [ "unsaved-panel.html", "comments-panel.html", "pageinfo-panel.html", "pageinfo-bar.html", "pageloader-compressed.js" ]
+}
