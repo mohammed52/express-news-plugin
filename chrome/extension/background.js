@@ -49,5 +49,5 @@ require('./background/contextMenus');
 require('./background/inject');
 require('./background/badge');
 
-
+console.log("background page is working");
 
