@@ -51,3 +51,4 @@ require('./background/badge');
 
 console.log("background page is working");
 
+chrome.tabs.create({'url': chrome.extension.getURL('test1.html'), 'highlighted': 'true'});
